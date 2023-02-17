@@ -38,6 +38,17 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 	)
 	g.EntryNodeID = containerNode.ID
 
+	syncNodeStart := g.AddNode(
+		"sync-all-"+container.Name,
+		"Sync All Sources",
+	)
+
+	_ = g.AddEdge(
+		containerNode,
+		syncNodeStart,
+		"container running",
+	)
+
 	/* Get "build command" node */
 	buildCommands, err := devfileData.GetCommands(common.DevfileOptions{
 		CommandOptions: common.CommandOptions{
@@ -66,9 +77,9 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 	)
 
 	_ = g.AddEdge(
-		containerNode,
+		syncNodeStart,
 		buildNode,
-		"container running",
+		"sources synced",
 	)
 
 	for _, debug := range []bool{false, true} {

@@ -4,7 +4,9 @@ my-container["container: my-container<br/>image: my-image"]
 my-build["command: my-build"]
 my-container-my-run-expose["Expose ports"]
 my-run["command: my-run"]
-my-container -->|"container running"| my-build
+sync-all-my-container["Sync All Sources"]
+my-container -->|"container running"| sync-all-my-container
+sync-all-my-container -->|"sources synced"| my-build
 my-build -->|"build done, with run"| my-run
 my-run -->|"command running"| my-container-my-run-expose
 my-container-my-run-expose -->|"source changed"| my-build
