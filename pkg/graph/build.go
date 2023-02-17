@@ -147,12 +147,24 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			"command running",
 		)
 
-		/* Add "source changed" edge */
+		// Add "Sync" node
+		syncNodeChanged := g.AddNode(
+			"sync-modified-"+container.Name,
+			"Sync Modified Sources",
+		)
 
 		_ = g.AddEdge(
 			exposeNode,
-			buildNode,
+			syncNodeChanged,
 			"source changed",
+		)
+
+		/* Add "source synced" edge */
+
+		_ = g.AddEdge(
+			syncNodeChanged,
+			buildNode,
+			"source synced",
 		)
 
 		/* Add "devfile changed" edge */
