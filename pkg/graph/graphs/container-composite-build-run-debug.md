@@ -32,6 +32,5 @@ my-debug-1 -->|"my-debug-1 done"| my-debug-2
 my-debug-2 -->|"my-debug-2 done"| my-debug-3
 my-debug-3 -->|"command running"| my-container-my-debug-1-expose
 my-container-my-debug-1-expose -->|"source changed"| sync-modified-my-container
-sync-modified-my-container -->|"source synced"| my-build-1
 my-container-my-debug-1-expose -->|"devfile changed"| my-container
 ```

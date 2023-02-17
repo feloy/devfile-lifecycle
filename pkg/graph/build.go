@@ -136,6 +136,8 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			"command running",
 		)
 
+		_, syncNodeChangedExists := g.nodes["sync-modified-"+container.Name]
+
 		// Add "Sync" node
 		syncNodeChanged := g.AddNode(
 			"sync-modified-"+container.Name,
@@ -150,18 +152,20 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 
 		/* Add "source synced" edge */
 
-		if defaultRunCommand.Exec != nil && defaultRunCommand.Exec.HotReloadCapable != nil && *defaultRunCommand.Exec.HotReloadCapable {
-			_ = g.AddEdge(
-				syncNodeChanged,
-				exposeNode,
-				"source synced",
-			)
-		} else {
-			_ = g.AddEdge(
-				syncNodeChanged,
-				buildNodeStart,
-				"source synced",
-			)
+		if !syncNodeChangedExists {
+			if defaultRunCommand.Exec != nil && defaultRunCommand.Exec.HotReloadCapable != nil && *defaultRunCommand.Exec.HotReloadCapable {
+				_ = g.AddEdge(
+					syncNodeChanged,
+					exposeNode,
+					"source synced",
+				)
+			} else {
+				_ = g.AddEdge(
+					syncNodeChanged,
+					buildNodeStart,
+					"source synced",
+				)
+			}
 		}
 
 		/* Add "devfile changed" edge */

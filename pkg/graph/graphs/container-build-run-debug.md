@@ -18,6 +18,5 @@ my-container-my-run-expose -->|"devfile changed"| my-container
 my-build -->|"build done, with debug"| my-debug
 my-debug -->|"command running"| my-container-my-debug-expose
 my-container-my-debug-expose -->|"source changed"| sync-modified-my-container
-sync-modified-my-container -->|"source synced"| my-build
 my-container-my-debug-expose -->|"devfile changed"| my-container
 ```
