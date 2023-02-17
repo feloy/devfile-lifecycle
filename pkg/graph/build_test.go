@@ -98,6 +98,59 @@ func TestBuildGraph(t *testing.T) {
 	defaultDebugCommand := *debugCommand.DeepCopy()
 	defaultDebugCommand.Exec.Group.IsDefault = pointer.Bool(true)
 
+	build1Command := v1alpha2.Command{
+		Id: "my-build-1",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 1",
+				Component:   "my-container",
+			},
+		},
+	}
+
+	build2Command := v1alpha2.Command{
+		Id: "my-build-2",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "go run main.go",
+				Component:   "my-container",
+			},
+		},
+	}
+
+	build3Command := v1alpha2.Command{
+		Id: "my-build-3",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 3",
+				Component:   "my-container",
+			},
+		},
+	}
+
+	compositeBuildCommand := v1alpha2.Command{
+		Id: "my-composite-build",
+		CommandUnion: v1alpha2.CommandUnion{
+			Composite: &v1alpha2.CompositeCommand{
+				Commands: []string{
+					"my-build-1",
+					"my-build-2",
+					"my-build-3",
+				},
+				LabeledCommand: v1alpha2.LabeledCommand{
+					BaseCommand: v1alpha2.BaseCommand{
+						Group: &v1alpha2.CommandGroup{
+							Kind: v1alpha2.BuildCommandGroupKind,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	defaultCompositeBuildCommand := *compositeBuildCommand.DeepCopy()
+	defaultCompositeBuildCommand.Composite.Group.IsDefault = pointer.Bool(true)
+
 	tests := []struct {
 		name        string
 		filename    string
@@ -146,6 +199,21 @@ func TestBuildGraph(t *testing.T) {
 				return []v1alpha2.Command{
 					defaultBuildCommand,
 					defaultRunHotReloadCommand,
+				}
+			},
+		},
+		{
+			name:        "container with Composite Build and Exec Run commands",
+			filename:    "container-composite-build-exec-run",
+			dataVersion: string(data.APISchemaVersion200),
+			component:   func() v1alpha2.Component { return baseComponent },
+			commands: func() []v1alpha2.Command {
+				return []v1alpha2.Command{
+					build1Command,
+					build2Command,
+					build3Command,
+					defaultCompositeBuildCommand,
+					defaultRunCommand,
 				}
 			},
 		},

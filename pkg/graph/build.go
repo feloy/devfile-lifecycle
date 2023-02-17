@@ -71,16 +71,10 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 		return g, nil
 	}
 
-	buildNode := g.AddNode(
-		defaultBuildCommand.Id,
-		"command: "+defaultBuildCommand.Id,
-	)
-
-	_ = g.AddEdge(
-		syncNodeStart,
-		buildNode,
-		"sources synced",
-	)
+	buildNodeStart, buildNodeEnd, err := addCommand(g, devfileData, defaultBuildCommand, syncNodeStart, "sources synced")
+	if err != nil {
+		return nil, err
+	}
 
 	for _, debug := range []bool{false, true} {
 		/* Get "run command" node */
@@ -110,22 +104,17 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			continue
 		}
 
-		runNode := g.AddNode(
-			defaultRunCommand.Id,
-			"command: "+defaultRunCommand.Id,
-		)
-
 		edgeText := "build done, "
 		if debug {
 			edgeText += "with debug"
 		} else {
 			edgeText += "with run"
 		}
-		_ = g.AddEdge(
-			buildNode,
-			runNode,
-			edgeText,
-		)
+
+		runNode, _, err := addCommand(g, devfileData, defaultRunCommand, buildNodeEnd, edgeText)
+		if err != nil {
+			return nil, err
+		}
 
 		lines := []string{
 			"Expose ports",
@@ -170,7 +159,7 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 		} else {
 			_ = g.AddEdge(
 				syncNodeChanged,
-				buildNode,
+				buildNodeStart,
 				"source synced",
 			)
 		}
@@ -185,4 +174,59 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 	}
 
 	return g, nil
+}
+
+func addCommand(g *Graph, devfileData data.DevfileData, command v1alpha2.Command, nodeBefore *Node, text ...string) (start *Node, end *Node, err error) {
+	if command.Exec != nil {
+		return addExecCommand(g, command, nodeBefore, text...)
+	}
+	if command.Composite != nil {
+		return addCompositeCommand(g, devfileData, command, nodeBefore, text...)
+	}
+	return nil, nil, fmt.Errorf("Command type not implemented for %s", command.Id)
+}
+
+func addExecCommand(g *Graph, command v1alpha2.Command, nodeBefore *Node, text ...string) (*Node, *Node, error) {
+	node := g.AddNode(
+		command.Id,
+		"command: "+command.Id,
+	)
+
+	_ = g.AddEdge(
+		nodeBefore,
+		node,
+		text...,
+	)
+
+	return node, node, nil
+
+}
+
+func addCompositeCommand(g *Graph, devfileData data.DevfileData, command v1alpha2.Command, nodeBefore *Node, text ...string) (*Node, *Node, error) {
+	previousNode := nodeBefore
+	var firstNode *Node
+	for _, subcommandName := range command.Composite.Commands {
+		subcommands, err := devfileData.GetCommands(common.DevfileOptions{
+			FilterByName: subcommandName,
+		})
+		if err != nil {
+			return nil, nil, err
+		}
+		if len(subcommands) != 1 {
+			return nil, nil, fmt.Errorf("command not found: %s", subcommandName)
+		}
+		var first *Node
+		first, previousNode, err = addCommand(g, devfileData, subcommands[0], previousNode, text...)
+		if err != nil {
+			return nil, nil, err
+		}
+		if firstNode == nil {
+			firstNode = first
+		}
+		text = []string{
+			subcommandName + " done",
+		}
+	}
+
+	return firstNode, previousNode, nil
 }
