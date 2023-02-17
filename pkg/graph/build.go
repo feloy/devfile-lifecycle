@@ -111,7 +111,7 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			edgeText += "with run"
 		}
 
-		runNode, _, err := addCommand(g, devfileData, defaultRunCommand, buildNodeEnd, edgeText)
+		runNodeStart, runNodeEnd, err := addCommand(g, devfileData, defaultRunCommand, buildNodeEnd, edgeText)
 		if err != nil {
 			return nil, err
 		}
@@ -126,12 +126,12 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			lines = append(lines, fmt.Sprintf("%s: %d", endpoint.Name, endpoint.TargetPort))
 		}
 		exposeNode := g.AddNode(
-			container.Name+"-"+runNode.ID+"-expose",
+			container.Name+"-"+runNodeStart.ID+"-expose",
 			lines...,
 		)
 
 		_ = g.AddEdge(
-			runNode,
+			runNodeEnd,
 			exposeNode,
 			"command running",
 		)
@@ -150,7 +150,7 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 
 		/* Add "source synced" edge */
 
-		if defaultRunCommand.Exec.HotReloadCapable != nil && *defaultRunCommand.Exec.HotReloadCapable {
+		if defaultRunCommand.Exec != nil && defaultRunCommand.Exec.HotReloadCapable != nil && *defaultRunCommand.Exec.HotReloadCapable {
 			_ = g.AddEdge(
 				syncNodeChanged,
 				exposeNode,
