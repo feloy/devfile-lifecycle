@@ -11,6 +11,6 @@ sync-all-my-container -->|"sources synced"| my-build
 my-build -->|"build done, with run"| my-run
 my-run -->|"command running"| my-container-my-run-expose
 my-container-my-run-expose -->|"source changed"| sync-modified-my-container
-sync-modified-my-container -->|"source synced"| my-build
+sync-modified-my-container -->|"source synced"| my-container-my-run-expose
 my-container-my-run-expose -->|"devfile changed"| my-container
 ```

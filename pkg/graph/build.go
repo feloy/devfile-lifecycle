@@ -161,11 +161,19 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 
 		/* Add "source synced" edge */
 
-		_ = g.AddEdge(
-			syncNodeChanged,
-			buildNode,
-			"source synced",
-		)
+		if defaultRunCommand.Exec.HotReloadCapable != nil && *defaultRunCommand.Exec.HotReloadCapable {
+			_ = g.AddEdge(
+				syncNodeChanged,
+				exposeNode,
+				"source synced",
+			)
+		} else {
+			_ = g.AddEdge(
+				syncNodeChanged,
+				buildNode,
+				"source synced",
+			)
+		}
 
 		/* Add "devfile changed" edge */
 

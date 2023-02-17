@@ -12,6 +12,7 @@ commands:
     group:
       isDefault: true
       kind: run
+    hotReloadCapable: true
   id: my-run
 components:
 - container:

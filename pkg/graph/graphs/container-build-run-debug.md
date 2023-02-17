@@ -2,8 +2,8 @@
 graph TB
 my-container["container: my-container<br/>image: my-image"]
 my-build["command: my-build"]
-my-container-my-debug-expose["Expose ports"]
-my-container-my-run-expose["Expose ports"]
+my-container-my-debug-expose["Expose ports<br/>http: 8080<br/>debug: 5858"]
+my-container-my-run-expose["Expose ports<br/>http: 8080"]
 my-debug["command: my-debug"]
 my-run["command: my-run"]
 sync-all-my-container["Sync All Sources"]

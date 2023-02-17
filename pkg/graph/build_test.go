@@ -21,6 +21,16 @@ func TestBuildGraph(t *testing.T) {
 				Container: v1alpha2.Container{
 					Image: "my-image",
 				},
+				Endpoints: []v1alpha2.Endpoint{
+					{
+						Name:       "http",
+						TargetPort: 8080,
+					},
+					{
+						Name:       "debug",
+						TargetPort: 5858,
+					},
+				},
 			},
 		},
 	}
@@ -64,6 +74,9 @@ func TestBuildGraph(t *testing.T) {
 
 	defaultRunCommand := *runCommand.DeepCopy()
 	defaultRunCommand.Exec.Group.IsDefault = pointer.Bool(true)
+
+	defaultRunHotReloadCommand := *defaultRunCommand.DeepCopy()
+	defaultRunHotReloadCommand.Exec.HotReloadCapable = pointer.Bool(true)
 
 	debugCommand := v1alpha2.Command{
 		Id: "my-debug",
@@ -121,6 +134,18 @@ func TestBuildGraph(t *testing.T) {
 					defaultBuildCommand,
 					defaultRunCommand,
 					defaultDebugCommand,
+				}
+			},
+		},
+		{
+			name:        "container with Exec Build and HotReload Capable Run commands",
+			filename:    "container-build-run-hot-reload",
+			dataVersion: string(data.APISchemaVersion200),
+			component:   func() v1alpha2.Component { return baseComponent },
+			commands: func() []v1alpha2.Command {
+				return []v1alpha2.Command{
+					defaultBuildCommand,
+					defaultRunHotReloadCommand,
 				}
 			},
 		},

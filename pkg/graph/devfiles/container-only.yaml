@@ -1,5 +1,10 @@
 components:
 - container:
+    endpoints:
+    - name: http
+      targetPort: 8080
+    - name: debug
+      targetPort: 5858
     image: my-image
   name: my-container
 metadata: {}
