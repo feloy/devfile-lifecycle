@@ -1,0 +1,6 @@
+components:
+- container:
+    image: my-image
+  name: my-container
+metadata: {}
+schemaVersion: 2.0.0

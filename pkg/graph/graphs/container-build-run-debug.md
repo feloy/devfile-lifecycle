@@ -1,0 +1,18 @@
+```mermaid
+graph TB
+my-container["container: my-container<br/>image: my-image"]
+my-build["command: my-build"]
+my-container-my-debug-expose["Expose ports"]
+my-container-my-run-expose["Expose ports"]
+my-debug["command: my-debug"]
+my-run["command: my-run"]
+my-container -->|"container running"| my-build
+my-build -->|"build done, with run"| my-run
+my-run -->|"command running"| my-container-my-run-expose
+my-container-my-run-expose -->|"source changed"| my-build
+my-container-my-run-expose -->|"devfile changed"| my-container
+my-build -->|"build done, with debug"| my-debug
+my-debug -->|"command running"| my-container-my-debug-expose
+my-container-my-debug-expose -->|"source changed"| my-build
+my-container-my-debug-expose -->|"devfile changed"| my-container
+```
