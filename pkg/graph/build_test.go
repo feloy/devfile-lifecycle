@@ -108,12 +108,34 @@ func TestBuildGraph(t *testing.T) {
 		},
 	}
 
+	build2aCommand := v1alpha2.Command{
+		Id: "my-build-2a",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 21",
+				Component:   "my-container",
+			},
+		},
+	}
+
+	build2bCommand := v1alpha2.Command{
+		Id: "my-build-2b",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 22",
+				Component:   "my-container",
+			},
+		},
+	}
+
 	build2Command := v1alpha2.Command{
 		Id: "my-build-2",
 		CommandUnion: v1alpha2.CommandUnion{
-			Exec: &v1alpha2.ExecCommand{
-				CommandLine: "go run main.go",
-				Component:   "my-container",
+			Composite: &v1alpha2.CompositeCommand{
+				Commands: []string{
+					"my-build-2a",
+					"my-build-2b",
+				},
 			},
 		},
 	}
@@ -209,6 +231,8 @@ func TestBuildGraph(t *testing.T) {
 			component:   func() v1alpha2.Component { return baseComponent },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
+					build2aCommand,
+					build2bCommand,
 					build1Command,
 					build2Command,
 					build3Command,

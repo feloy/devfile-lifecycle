@@ -1,11 +1,20 @@
 commands:
 - exec:
+    commandLine: sleep 21
+    component: my-container
+  id: my-build-2a
+- exec:
+    commandLine: sleep 22
+    component: my-container
+  id: my-build-2b
+- exec:
     commandLine: sleep 1
     component: my-container
   id: my-build-1
-- exec:
-    commandLine: go run main.go
-    component: my-container
+- composite:
+    commands:
+    - my-build-2a
+    - my-build-2b
   id: my-build-2
 - exec:
     commandLine: sleep 3
