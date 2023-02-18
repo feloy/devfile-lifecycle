@@ -279,12 +279,35 @@ func TestBuildGraph(t *testing.T) {
 	defaultCompositeDebugCommand := *compositeDebugCommand.DeepCopy()
 	defaultCompositeDebugCommand.Composite.Group.IsDefault = pointer.Bool(true)
 
+	postStartCommand1 := v1alpha2.Command{
+		Id: "post-start-1",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 1",
+				Component:   "my-container",
+			},
+		},
+	}
+
+	postStartCommand2 := v1alpha2.Command{
+		Id: "post-start-2",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 2",
+				Component:   "my-container",
+			},
+		},
+	}
+
+	postStartEvents := []string{"post-start-1", "post-start-2"}
+
 	tests := []struct {
-		name        string
-		filename    string
-		dataVersion string
-		component   func() v1alpha2.Component
-		commands    func() []v1alpha2.Command
+		name            string
+		filename        string
+		dataVersion     string
+		component       func() v1alpha2.Component
+		commands        func() []v1alpha2.Command
+		postStartEvents []string
 	}{
 		{
 			name:        "container only",
@@ -391,6 +414,21 @@ func TestBuildGraph(t *testing.T) {
 				}
 			},
 		},
+		{
+			name:        "container with Exec Build and Run commands, and postStart event",
+			filename:    "container-build-run-post-start",
+			dataVersion: string(data.APISchemaVersion200),
+			component:   func() v1alpha2.Component { return baseComponent },
+			commands: func() []v1alpha2.Command {
+				return []v1alpha2.Command{
+					defaultBuildCommand,
+					defaultRunCommand,
+					postStartCommand1,
+					postStartCommand2,
+				}
+			},
+			postStartEvents: postStartEvents,
+		},
 	}
 
 	for _, tt := range tests {
@@ -409,6 +447,19 @@ func TestBuildGraph(t *testing.T) {
 			err = devfileData.AddCommands(tt.commands())
 			if err != nil {
 				t.Error(err)
+			}
+
+			if tt.postStartEvents != nil {
+				events := v1alpha2.Events{
+					DevWorkspaceEvents: v1alpha2.DevWorkspaceEvents{
+						PostStart: tt.postStartEvents,
+					},
+				}
+
+				err = devfileData.AddEvents(events)
+				if err != nil {
+					t.Error(err)
+				}
 			}
 
 			devfileBytes := getDevfileBytes(t, devfileData)

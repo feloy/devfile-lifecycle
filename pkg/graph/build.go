@@ -49,6 +49,22 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 		"container running",
 	)
 
+	/* Get PostStart event */
+	postStartEvents := devfileData.GetEvents().PostStart
+
+	previousNode := syncNodeStart
+	nextText := "sources synced"
+	for _, postStartEvent := range postStartEvents {
+		node := g.AddNode(postStartEvent, "Post Start", "command: "+postStartEvent)
+		_ = g.AddEdge(
+			previousNode,
+			node,
+			nextText,
+		)
+		previousNode = node
+		nextText = postStartEvent + " done"
+	}
+
 	/* Get "build command" node */
 	buildCommands, err := devfileData.GetCommands(common.DevfileOptions{
 		CommandOptions: common.CommandOptions{
@@ -71,7 +87,7 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 		return g, nil
 	}
 
-	buildNodeStart, buildNodeEnd, err := addCommand(g, devfileData, defaultBuildCommand, syncNodeStart, "sources synced")
+	buildNodeStart, buildNodeEnd, err := addCommand(g, devfileData, defaultBuildCommand, previousNode, nextText)
 	if err != nil {
 		return nil, err
 	}
