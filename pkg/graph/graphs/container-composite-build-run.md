@@ -6,6 +6,7 @@ my-build-2a["command: my-build-2a"]
 my-build-2b["command: my-build-2b"]
 my-build-3["command: my-build-3"]
 my-container-my-run-1-expose["Expose ports<br/>http: 8080"]
+my-container-stop["Stop container<br/>container: my-container"]
 my-run-1["command: my-run-1"]
 my-run-2["command: my-run-2"]
 my-run-3["command: my-run-3"]
@@ -20,6 +21,7 @@ my-build-3 -->|"build done, with run"| my-run-1
 my-run-1 -->|"my-run-1 done"| my-run-2
 my-run-2 -->|"my-run-2 done"| my-run-3
 my-run-3 -->|"command running"| my-container-my-run-1-expose
+my-container-my-run-1-expose -->|"User quits"| my-container-stop
 my-container-my-run-1-expose -->|"source changed"| sync-modified-my-container
 sync-modified-my-container -->|"source synced"| my-build-1
 my-container-my-run-1-expose -->|"devfile changed"| my-container

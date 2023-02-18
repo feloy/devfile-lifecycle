@@ -152,6 +152,18 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			"command running",
 		)
 
+		/* Add "stop container" node */
+
+		stopNode := g.AddNode(container.Name+"-stop", "Stop container", "container: "+container.Name)
+
+		/* Add "user quits" edge */
+
+		_ = g.AddEdge(
+			exposeNode,
+			stopNode,
+			"User quits",
+		)
+
 		_, syncNodeChangedExists := g.nodes["sync-modified-"+container.Name]
 
 		// Add "Sync" node
