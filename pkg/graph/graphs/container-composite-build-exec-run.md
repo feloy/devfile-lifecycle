@@ -8,8 +8,10 @@ my-build-3["command: my-build-3"]
 my-container-my-run-expose["Expose ports<br/>http: 8080"]
 my-container-stop["Stop container<br/>container: my-container"]
 my-run["command: my-run"]
+start["start"]
 sync-all-my-container["Sync All Sources"]
 sync-modified-my-container["Sync Modified Sources"]
+start -->|"dev"| my-container
 my-container -->|"container running"| sync-all-my-container
 sync-all-my-container -->|"sources synced"| my-build-1
 my-build-1 -->|"my-build-1 done"| my-build-2a

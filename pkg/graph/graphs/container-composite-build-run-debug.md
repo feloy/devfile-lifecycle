@@ -14,8 +14,10 @@ my-debug-3["command: my-debug-3"]
 my-run-1["command: my-run-1"]
 my-run-2["command: my-run-2"]
 my-run-3["command: my-run-3"]
+start["start"]
 sync-all-my-container["Sync All Sources"]
 sync-modified-my-container["Sync Modified Sources"]
+start -->|"dev"| my-container
 my-container -->|"container running"| sync-all-my-container
 sync-all-my-container -->|"sources synced"| my-build-1
 my-build-1 -->|"my-build-1 done"| my-build-2a

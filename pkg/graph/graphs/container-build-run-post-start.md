@@ -7,8 +7,10 @@ my-container-stop["Stop container<br/>container: my-container"]
 my-run["command: my-run"]
 post-start-1["Post Start<br/>command: post-start-1"]
 post-start-2["Post Start<br/>command: post-start-2"]
+start["start"]
 sync-all-my-container["Sync All Sources"]
 sync-modified-my-container["Sync Modified Sources"]
+start -->|"dev"| my-container
 my-container -->|"container running"| sync-all-my-container
 sync-all-my-container -->|"sources synced"| post-start-1
 post-start-1 -->|"post-start-1 done"| post-start-2

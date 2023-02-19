@@ -31,12 +31,20 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 
 	container := containers[0]
 
+	start := g.AddNode("start")
+
 	containerNode := g.AddNode(
 		container.Name,
 		"container: "+container.Name,
 		"image: "+container.Container.Image,
 	)
 	g.EntryNodeID = containerNode.ID
+
+	_ = g.AddEdge(
+		start,
+		containerNode,
+		"dev",
+	)
 
 	syncNodeStart := g.AddNode(
 		"sync-all-"+container.Name,
@@ -152,6 +160,22 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			"command running",
 		)
 
+		/* Get PreStop event */
+		preStopEvents := devfileData.GetEvents().PreStop
+
+		previousNode := exposeNode
+		nextText := "User quits"
+		for _, preStopEvent := range preStopEvents {
+			node := g.AddNode(preStopEvent, "Pre Stop", "command: "+preStopEvent)
+			_ = g.AddEdge(
+				previousNode,
+				node,
+				nextText,
+			)
+			previousNode = node
+			nextText = preStopEvent + " done"
+		}
+
 		/* Add "stop container" node */
 
 		stopNode := g.AddNode(container.Name+"-stop", "Stop container", "container: "+container.Name)
@@ -159,9 +183,9 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 		/* Add "user quits" edge */
 
 		_ = g.AddEdge(
-			exposeNode,
+			previousNode,
 			stopNode,
-			"User quits",
+			nextText,
 		)
 
 		_, syncNodeChangedExists := g.nodes["sync-modified-"+container.Name]

@@ -301,6 +301,28 @@ func TestBuildGraph(t *testing.T) {
 
 	postStartEvents := []string{"post-start-1", "post-start-2"}
 
+	preStopCommand1 := v1alpha2.Command{
+		Id: "pre-stop-1",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 1",
+				Component:   "my-container",
+			},
+		},
+	}
+
+	preStopCommand2 := v1alpha2.Command{
+		Id: "pre-stop-2",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 2",
+				Component:   "my-container",
+			},
+		},
+	}
+
+	preStopEvents := []string{"pre-stop-1", "pre-stop-2"}
+
 	tests := []struct {
 		name            string
 		filename        string
@@ -308,6 +330,7 @@ func TestBuildGraph(t *testing.T) {
 		component       func() v1alpha2.Component
 		commands        func() []v1alpha2.Command
 		postStartEvents []string
+		preStopEvents   []string
 	}{
 		{
 			name:        "container only",
@@ -429,6 +452,21 @@ func TestBuildGraph(t *testing.T) {
 			},
 			postStartEvents: postStartEvents,
 		},
+		{
+			name:        "container with Exec Build and Run commands, and preStop event",
+			filename:    "container-build-run-pre-stop",
+			dataVersion: string(data.APISchemaVersion200),
+			component:   func() v1alpha2.Component { return baseComponent },
+			commands: func() []v1alpha2.Command {
+				return []v1alpha2.Command{
+					defaultBuildCommand,
+					defaultRunCommand,
+					preStopCommand1,
+					preStopCommand2,
+				}
+			},
+			preStopEvents: preStopEvents,
+		},
 	}
 
 	for _, tt := range tests {
@@ -449,10 +487,11 @@ func TestBuildGraph(t *testing.T) {
 				t.Error(err)
 			}
 
-			if tt.postStartEvents != nil {
+			if tt.postStartEvents != nil || tt.preStopEvents != nil {
 				events := v1alpha2.Events{
 					DevWorkspaceEvents: v1alpha2.DevWorkspaceEvents{
 						PostStart: tt.postStartEvents,
+						PreStop:   tt.preStopEvents,
 					},
 				}
 
