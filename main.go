@@ -7,7 +7,7 @@ import (
 	"github.com/devfile/library/v2/pkg/devfile"
 	"github.com/devfile/library/v2/pkg/devfile/parser"
 
-	"github.com/feloy/devfile-states/pkg/graph"
+	"github.com/feloy/devfile-lifecycle/pkg/graph"
 )
 
 func usage(args []string, withError bool) {

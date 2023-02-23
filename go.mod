@@ -1,4 +1,4 @@
-module github.com/feloy/devfile-states
+module github.com/feloy/devfile-lifecycle
 
 go 1.19
 
