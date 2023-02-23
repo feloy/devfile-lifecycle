@@ -8,7 +8,7 @@ import (
 	"github.com/devfile/library/v2/pkg/devfile/parser/data"
 	"github.com/devfile/library/v2/pkg/devfile/parser/data/v2/common"
 
-	"github.com/feloy/devfile-states/pkg/dftools"
+	"github.com/feloy/devfile-lifecycle/pkg/dftools"
 )
 
 func Build(devfileData data.DevfileData) (*Graph, error) {

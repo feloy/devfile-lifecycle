@@ -1,4 +1,4 @@
-package graph
+package tests
 
 import (
 	"bytes"
@@ -10,6 +10,7 @@ import (
 	devfileCtx "github.com/devfile/library/v2/pkg/devfile/parser/context"
 	"github.com/devfile/library/v2/pkg/devfile/parser/data"
 	"github.com/devfile/library/v2/pkg/testingutil/filesystem"
+	"github.com/feloy/devfile-lifecycle/pkg/graph"
 	"k8s.io/utils/pointer"
 )
 
@@ -515,17 +516,6 @@ func TestBuildGraph(t *testing.T) {
 			}
 		})
 	}
-
-	//err = devfileData.AddCommands(tt.execCommands)
-	//if err != nil {
-	//	t.Error(err)
-	//}
-	//err = devfileData.AddCommands(tt.compCommands)
-	//if err != nil {
-	//	t.Error(err)
-	//}
-
-	// fmt.Printf("%s\n", s)
 }
 
 func getDevfileBytes(t *testing.T, devfileData data.DevfileData) []byte {
@@ -556,7 +546,7 @@ func getShotBytes(filename, prefix, suffix string) []byte {
 }
 
 func getGraphBytes(t *testing.T, devfileData data.DevfileData) []byte {
-	g, err := Build(devfileData)
+	g, err := graph.Build(devfileData)
 	if err != nil {
 		t.Error(err)
 	}
