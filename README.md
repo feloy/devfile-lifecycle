@@ -33,8 +33,12 @@ The output of the command is in text format, using the Mermaid standard. This ou
 
 ## Usage
 
-```
+```bash
+# From a file on disk
 $ go run main.go path/to/my/devfile.yaml > devfile.md
+
+# From a Devfile Registry (don't forget trailing /)
+$ go run main.go https://registry.devfile.io/devfiles/nodejs-basic/ > nodejs-basic.md
 ```
 
 ## Examples

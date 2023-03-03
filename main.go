@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/devfile/library/v2/pkg/devfile"
 	"github.com/devfile/library/v2/pkg/devfile/parser"
@@ -22,8 +23,11 @@ func main() {
 		usage(os.Args, true)
 	}
 	file := os.Args[1]
-	parserArgs := parser.ParserArgs{
-		Path: file,
+	parserArgs := parser.ParserArgs{}
+	if strings.HasPrefix(file, "http") {
+		parserArgs.URL = file
+	} else {
+		parserArgs.Path = file
 	}
 	devfile, _, err := devfile.ParseDevfileAndValidate(parserArgs)
 	if err != nil {
