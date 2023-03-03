@@ -229,6 +229,41 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 		)
 	}
 
+	deployCommands, err := devfileData.GetCommands(common.DevfileOptions{
+		CommandOptions: common.CommandOptions{
+			CommandGroupKind: v1alpha2.DeployCommandGroupKind,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var defaultDeployCommand v1alpha2.Command
+	for _, deployCommand := range deployCommands {
+		if dftools.GetCommandGroup(deployCommand).IsDefault != nil && *dftools.GetCommandGroup(deployCommand).IsDefault {
+			defaultDeployCommand = deployCommand
+			break
+		}
+	}
+
+	if defaultDeployCommand.Id != "" {
+		_, lastNode, err := addCommand(g, devfileData, defaultDeployCommand, start, "deploy")
+		if err != nil {
+			return nil, err
+		}
+
+		finishNode := g.AddNode(
+			"finish-deploy",
+			"end",
+		)
+
+		_ = g.AddEdge(
+			lastNode,
+			finishNode,
+			"command done",
+		)
+	}
+
 	return g, nil
 }
 
@@ -239,10 +274,29 @@ func addCommand(g *Graph, devfileData data.DevfileData, command v1alpha2.Command
 	if command.Composite != nil {
 		return addCompositeCommand(g, devfileData, command, nodeBefore, text...)
 	}
-	return nil, nil, fmt.Errorf("Command type not implemented for %s", command.Id)
+	if command.Apply != nil {
+		return addApplyCommand(g, command, nodeBefore, text...)
+	}
+	return nil, nil, fmt.Errorf("command type not implemented for %s", command.Id)
 }
 
 func addExecCommand(g *Graph, command v1alpha2.Command, nodeBefore *Node, text ...string) (*Node, *Node, error) {
+	node := g.AddNode(
+		command.Id,
+		"command: "+command.Id,
+	)
+
+	_ = g.AddEdge(
+		nodeBefore,
+		node,
+		text...,
+	)
+
+	return node, node, nil
+
+}
+
+func addApplyCommand(g *Graph, command v1alpha2.Command, nodeBefore *Node, text ...string) (*Node, *Node, error) {
 	node := g.AddNode(
 		command.Id,
 		"command: "+command.Id,
