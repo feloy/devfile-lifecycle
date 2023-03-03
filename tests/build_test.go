@@ -129,7 +129,7 @@ func TestBuildGraph(t *testing.T) {
 		},
 	}
 
-	build2Command := v1alpha2.Command{
+	build2CompositeCommand := v1alpha2.Command{
 		Id: "my-build-2",
 		CommandUnion: v1alpha2.CommandUnion{
 			Composite: &v1alpha2.CompositeCommand{
@@ -137,6 +137,16 @@ func TestBuildGraph(t *testing.T) {
 					"my-build-2a",
 					"my-build-2b",
 				},
+			},
+		},
+	}
+
+	build2Command := v1alpha2.Command{
+		Id: "my-build-2",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "sleep 22",
+				Component:   "my-container",
 			},
 		},
 	}
@@ -173,6 +183,12 @@ func TestBuildGraph(t *testing.T) {
 
 	defaultCompositeBuildCommand := *compositeBuildCommand.DeepCopy()
 	defaultCompositeBuildCommand.Composite.Group.IsDefault = pointer.Bool(true)
+
+	parallelCompositeBuildCommand := compositeBuildCommand.DeepCopy()
+	parallelCompositeBuildCommand.Composite.Parallel = pointer.Bool(true)
+
+	defaultParallelCompositeBuildCommand := *parallelCompositeBuildCommand.DeepCopy()
+	defaultParallelCompositeBuildCommand.Composite.Group.IsDefault = pointer.Bool(true)
 
 	run1Command := v1alpha2.Command{
 		Id: "my-run-1",
@@ -387,9 +403,41 @@ func TestBuildGraph(t *testing.T) {
 					build2aCommand,
 					build2bCommand,
 					build1Command,
-					build2Command,
+					build2CompositeCommand,
 					build3Command,
 					defaultCompositeBuildCommand,
+					defaultRunCommand,
+				}
+			},
+		},
+		{
+			name:        "container with simple Parallel Composite Build and Exec Run commands",
+			filename:    "container-simple-parallel-composite-build-exec-run",
+			dataVersion: string(data.APISchemaVersion200),
+			component:   func() v1alpha2.Component { return baseComponent },
+			commands: func() []v1alpha2.Command {
+				return []v1alpha2.Command{
+					build1Command,
+					build2Command,
+					build3Command,
+					defaultParallelCompositeBuildCommand,
+					defaultRunCommand,
+				}
+			},
+		},
+		{
+			name:        "container with Parallel Composite Build and Exec Run commands",
+			filename:    "container-parallel-composite-build-exec-run",
+			dataVersion: string(data.APISchemaVersion200),
+			component:   func() v1alpha2.Component { return baseComponent },
+			commands: func() []v1alpha2.Command {
+				return []v1alpha2.Command{
+					build2aCommand,
+					build2bCommand,
+					build1Command,
+					build2CompositeCommand,
+					build3Command,
+					defaultParallelCompositeBuildCommand,
 					defaultRunCommand,
 				}
 			},
@@ -404,7 +452,7 @@ func TestBuildGraph(t *testing.T) {
 					build2aCommand,
 					build2bCommand,
 					build1Command,
-					build2Command,
+					build2CompositeCommand,
 					build3Command,
 					run1Command,
 					run2Command,
@@ -424,7 +472,7 @@ func TestBuildGraph(t *testing.T) {
 					build2aCommand,
 					build2bCommand,
 					build1Command,
-					build2Command,
+					build2CompositeCommand,
 					build3Command,
 					defaultCompositeBuildCommand,
 					run1Command,
