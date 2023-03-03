@@ -324,6 +324,25 @@ func TestBuildGraph(t *testing.T) {
 
 	preStopEvents := []string{"pre-stop-1", "pre-stop-2"}
 
+	deployCommand := v1alpha2.Command{
+		Id: "my-deploy",
+		CommandUnion: v1alpha2.CommandUnion{
+			Apply: &v1alpha2.ApplyCommand{
+				Component: "kubernetes-deploy",
+				LabeledCommand: v1alpha2.LabeledCommand{
+					BaseCommand: v1alpha2.BaseCommand{
+						Group: &v1alpha2.CommandGroup{
+							Kind: v1alpha2.DeployCommandGroupKind,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	defaultDeployCommand := *deployCommand.DeepCopy()
+	defaultDeployCommand.Apply.Group.IsDefault = pointer.Bool(true)
+
 	tests := []struct {
 		name            string
 		filename        string
@@ -467,6 +486,19 @@ func TestBuildGraph(t *testing.T) {
 				}
 			},
 			preStopEvents: preStopEvents,
+		},
+		{
+			name:        "container with Exec Build and Run commands + a deploy command",
+			filename:    "container-build-run-deploy",
+			dataVersion: string(data.APISchemaVersion200),
+			component:   func() v1alpha2.Component { return baseComponent },
+			commands: func() []v1alpha2.Command {
+				return []v1alpha2.Command{
+					defaultBuildCommand,
+					defaultRunCommand,
+					defaultDeployCommand,
+				}
+			},
 		},
 	}
 

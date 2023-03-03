@@ -1,0 +1,24 @@
+```mermaid
+graph TB
+my-container["container: my-container<br/>image: my-image"]
+finish-deploy["end"]
+my-build["command: my-build"]
+my-container-my-run-expose["Expose ports<br/>http: 8080"]
+my-container-stop["Stop container<br/>container: my-container"]
+my-deploy["command: my-deploy"]
+my-run["command: my-run"]
+start["start"]
+sync-all-my-container["Sync All Sources"]
+sync-modified-my-container["Sync Modified Sources"]
+start -->|"dev"| my-container
+my-container -->|"container running"| sync-all-my-container
+sync-all-my-container -->|"sources synced"| my-build
+my-build -->|"build done, with run"| my-run
+my-run -->|"command running"| my-container-my-run-expose
+my-container-my-run-expose -->|"User quits"| my-container-stop
+my-container-my-run-expose -->|"source changed"| sync-modified-my-container
+sync-modified-my-container -->|"source synced"| my-build
+my-container-my-run-expose -->|"devfile changed"| my-container
+start -->|"deploy"| my-deploy
+my-deploy -->|"command done"| finish-deploy
+```
