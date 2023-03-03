@@ -1,0 +1,41 @@
+commands:
+- exec:
+    commandLine: sleep 1
+    component: my-container
+  id: my-build-1
+- exec:
+    commandLine: sleep 22
+    component: my-container
+  id: my-build-2
+- exec:
+    commandLine: sleep 3
+    component: my-container
+  id: my-build-3
+- composite:
+    commands:
+    - my-build-1
+    - my-build-2
+    - my-build-3
+    group:
+      isDefault: true
+      kind: build
+    parallel: true
+  id: my-composite-build
+- exec:
+    commandLine: ./main
+    component: my-container
+    group:
+      isDefault: true
+      kind: run
+  id: my-run
+components:
+- container:
+    endpoints:
+    - name: http
+      targetPort: 8080
+    - name: debug
+      targetPort: 5858
+    image: my-image
+  name: my-container
+metadata: {}
+schemaVersion: 2.0.0

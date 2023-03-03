@@ -7,6 +7,7 @@ import (
 	"github.com/devfile/api/v2/pkg/apis/workspaces/v1alpha2"
 	"github.com/devfile/library/v2/pkg/devfile/parser/data"
 	"github.com/devfile/library/v2/pkg/devfile/parser/data/v2/common"
+	"k8s.io/utils/pointer"
 
 	"github.com/feloy/devfile-lifecycle/pkg/dftools"
 )
@@ -95,7 +96,7 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 		return g, nil
 	}
 
-	buildNodeStart, buildNodeEnd, err := addCommand(g, devfileData, defaultBuildCommand, previousNode, nextText)
+	buildNodesStart, buildNodesEnd, err := addCommand(g, devfileData, defaultBuildCommand, []*Node{previousNode}, nextText)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +136,7 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			edgeText += "with run"
 		}
 
-		runNodeStart, runNodeEnd, err := addCommand(g, devfileData, defaultRunCommand, buildNodeEnd, edgeText)
+		runNodesStart, runNodesEnd, err := addCommand(g, devfileData, defaultRunCommand, buildNodesEnd, edgeText)
 		if err != nil {
 			return nil, err
 		}
@@ -150,15 +151,17 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 			lines = append(lines, fmt.Sprintf("%s: %d", endpoint.Name, endpoint.TargetPort))
 		}
 		exposeNode := g.AddNode(
-			container.Name+"-"+runNodeStart.ID+"-expose",
+			container.Name+"-"+runNodesStart[0].ID+"-expose",
 			lines...,
 		)
 
-		_ = g.AddEdge(
-			runNodeEnd,
-			exposeNode,
-			"command running",
-		)
+		for _, runNodeEnd := range runNodesEnd {
+			_ = g.AddEdge(
+				runNodeEnd,
+				exposeNode,
+				"command running",
+			)
+		}
 
 		/* Get PreStop event */
 		preStopEvents := devfileData.GetEvents().PreStop
@@ -212,11 +215,13 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 					"source synced",
 				)
 			} else {
-				_ = g.AddEdge(
-					syncNodeChanged,
-					buildNodeStart,
-					"source synced",
-				)
+				for _, buildNodeStart := range buildNodesStart {
+					_ = g.AddEdge(
+						syncNodeChanged,
+						buildNodeStart,
+						"source synced",
+					)
+				}
 			}
 		}
 
@@ -232,35 +237,70 @@ func Build(devfileData data.DevfileData) (*Graph, error) {
 	return g, nil
 }
 
-func addCommand(g *Graph, devfileData data.DevfileData, command v1alpha2.Command, nodeBefore *Node, text ...string) (start *Node, end *Node, err error) {
+func addCommand(g *Graph, devfileData data.DevfileData, command v1alpha2.Command, nodesBefore []*Node, text ...string) (start []*Node, end []*Node, err error) {
 	if command.Exec != nil {
-		return addExecCommand(g, command, nodeBefore, text...)
+		return addExecCommand(g, command, nodesBefore, text...)
 	}
 	if command.Composite != nil {
-		return addCompositeCommand(g, devfileData, command, nodeBefore, text...)
+		return addCompositeCommand(g, devfileData, command, nodesBefore, text...)
 	}
 	return nil, nil, fmt.Errorf("Command type not implemented for %s", command.Id)
 }
 
-func addExecCommand(g *Graph, command v1alpha2.Command, nodeBefore *Node, text ...string) (*Node, *Node, error) {
+func addExecCommand(g *Graph, command v1alpha2.Command, nodesBefore []*Node, text ...string) ([]*Node, []*Node, error) {
 	node := g.AddNode(
 		command.Id,
 		"command: "+command.Id,
 	)
 
-	_ = g.AddEdge(
-		nodeBefore,
-		node,
-		text...,
-	)
+	for _, nodeBefore := range nodesBefore {
+		_ = g.AddEdge(
+			nodeBefore,
+			node,
+			text...,
+		)
+	}
 
-	return node, node, nil
+	return []*Node{node}, []*Node{node}, nil
 
 }
 
-func addCompositeCommand(g *Graph, devfileData data.DevfileData, command v1alpha2.Command, nodeBefore *Node, text ...string) (*Node, *Node, error) {
-	previousNode := nodeBefore
-	var firstNode *Node
+func addCompositeCommand(g *Graph, devfileData data.DevfileData, command v1alpha2.Command, nodesBefore []*Node, text ...string) ([]*Node, []*Node, error) {
+	// Serial
+	if !pointer.BoolDeref(command.Composite.Parallel, false) {
+		previousNodes := nodesBefore
+		var firstNode []*Node
+		for _, subcommandName := range command.Composite.Commands {
+			subcommands, err := devfileData.GetCommands(common.DevfileOptions{
+				FilterByName: subcommandName,
+			})
+			if err != nil {
+				return nil, nil, err
+			}
+			if len(subcommands) != 1 {
+				return nil, nil, fmt.Errorf("command not found: %s", subcommandName)
+			}
+			var first []*Node
+			first, previousNodes, err = addCommand(g, devfileData, subcommands[0], previousNodes, text...)
+			if err != nil {
+				return nil, nil, err
+			}
+			if firstNode == nil {
+				firstNode = first
+			}
+			text = []string{
+				subcommandName + " done",
+			}
+		}
+
+		return firstNode, previousNodes, nil
+	}
+
+	// Parallel
+
+	startNodes := make([]*Node, 0, len(command.Composite.Commands))
+	endNodes := make([]*Node, 0, len(command.Composite.Commands))
+
 	for _, subcommandName := range command.Composite.Commands {
 		subcommands, err := devfileData.GetCommands(common.DevfileOptions{
 			FilterByName: subcommandName,
@@ -271,18 +311,12 @@ func addCompositeCommand(g *Graph, devfileData data.DevfileData, command v1alpha
 		if len(subcommands) != 1 {
 			return nil, nil, fmt.Errorf("command not found: %s", subcommandName)
 		}
-		var first *Node
-		first, previousNode, err = addCommand(g, devfileData, subcommands[0], previousNode, text...)
+		start, end, err := addCommand(g, devfileData, subcommands[0], nodesBefore, text...)
 		if err != nil {
 			return nil, nil, err
 		}
-		if firstNode == nil {
-			firstNode = first
-		}
-		text = []string{
-			subcommandName + " done",
-		}
+		startNodes = append(startNodes, start...)
+		endNodes = append(endNodes, end...)
 	}
-
-	return firstNode, previousNode, nil
+	return startNodes, endNodes, nil
 }
