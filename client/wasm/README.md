@@ -5,9 +5,9 @@ This demo uses the devfile-lifecyle library (thanks to WebAssembly) to build a g
 Usage:
 
 ```shell
-$ GOOS=js GOARCH=wasm go build -o devfile.wasm && python -m http.server
+(cd ../.. && odo dev --platform podman)
 ```
 
-Then visit localhost:8000, enter a Devfile content into the textarea. The graph should be displayed on the right.
+Then visit localhost:20001, enter a Devfile content into the textarea. The graph should be displayed on the right.
 
 ![Screenshot](./webclient-devfile-lifecycle.png)
