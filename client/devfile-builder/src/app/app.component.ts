@@ -19,7 +19,8 @@ export class AppComponent {
   ) {}
 
   async onButtonClick(content: string){
-    const result = this.wasmGo.getFlowChart(content);
+    this.wasmGo.setDevfileContent(content);
+    const result = this.wasmGo.getFlowChart();
     const svg = await this.mermaid.getMermaidAsSVG(result);
     this.mermaidContent = svg;
   }

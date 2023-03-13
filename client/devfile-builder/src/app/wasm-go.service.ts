@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 
 declare const Go: any;
 declare const getFlowChart: any;
+declare const setDevfileContent: any;
 
 @Injectable({
   providedIn: 'root'
 })
+// WasmGoService uses the wasm module. 
+// The module manages a single instance of a Devfile
 export class WasmGoService {
 
   constructor() { 
@@ -16,8 +19,13 @@ export class WasmGoService {
     });
   }
 
+  // setDevfileContent calls the wasm module to reset the content of the Devfile
+  setDevfileContent(devfile: string) {
+    setDevfileContent(devfile);
+  }
+
   // getFlowChart calls the wasm module to get the lifecycle of the Devfile in mermaid chart format
-  getFlowChart(devfile: string): string {
-    return getFlowChart(devfile);
+  getFlowChart(): string {
+    return getFlowChart();
   }
 }
