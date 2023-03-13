@@ -39,3 +39,7 @@ schemaVersion: 2.2.0
 events:
   postStart:
   - build-webserver
+attributes:
+  space:
+    editor:
+      type: Idea
