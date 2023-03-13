@@ -1,0 +1,55 @@
+<html>  
+    <head>
+        <meta charset="utf-8"/>
+        <title>Devfile lifecycle</title>
+        <script src="wasm_exec.js"></script>
+        <script type="module">
+            import { onButtonClick, onInit } from "./lib.js";
+            window.onButtonClick = onButtonClick;
+            window.onInit = onInit;
+        </script>
+
+        <style>
+        div.mermaid {
+            /* font-family: 'trebuchet ms', verdana, arial; */
+            font-family: 'Courier New', Courier, monospace !important;
+        }
+
+        .flex-container {
+            display: flex;
+        }
+
+        .flex-child {
+            flex: 1;
+        }  
+
+        .flex-child:first-child {
+            margin-right: 20px;
+        } 
+
+        #input {
+            width: 100%;
+        }
+
+        button {
+            margin-top: 20px;
+        }
+        </style>
+    </head>
+    <body onload="onInit()">
+        <p>Paste a Devfile content below and click "View lifecycle"</p>
+        <div class="flex-container">
+
+            <div class="flex-child">
+                <textarea id="input" rows="30"></textarea>
+                <button onclick="onButtonClick()">View lifecycle</button>
+            </div>
+            
+            <div class="flex-child">
+                <div id="mermaid" class="mermaid"></div>
+            </div>
+            
+          </div>
+
+    </body>
+</html>  
