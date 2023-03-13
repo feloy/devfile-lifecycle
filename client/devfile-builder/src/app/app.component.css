@@ -1,0 +1,24 @@
+div.mermaid {
+    /* font-family: 'trebuchet ms', verdana, arial; */
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+}  
+
+.flex-child:first-child {
+    margin-right: 20px;
+} 
+
+#input {
+    width: 100%;
+}
+
+button {
+    margin-top: 20px;
+}
