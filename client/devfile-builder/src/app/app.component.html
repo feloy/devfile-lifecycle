@@ -1,0 +1,13 @@
+<p>Paste a Devfile content below and click "View lifecycle"</p>
+<div class="flex-container">
+
+    <div class="flex-child">
+        <textarea #input id="input" rows="30"></textarea>
+        <button (click)="onButtonClick(input.value)">View lifecycle</button>
+    </div>
+    
+    <div class="flex-child">
+        <div #mermaid id="mermaid" class="mermaid" [innerHTML]="sanitizer.bypassSecurityTrustHtml(mermaidContent)"></div>
+    </div>
+    
+</div>
