@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
@@ -9,7 +9,7 @@ import { WasmGoService } from 'src/app/services/wasm-go.service';
   templateUrl: './metadata.component.html',
   styleUrls: ['./metadata.component.css']
 })
-export class MetadataComponent {
+export class MetadataComponent implements OnInit {
   name = new FormControl('');
   displayName = new FormControl('');
   description = new FormControl('');
@@ -18,6 +18,18 @@ export class MetadataComponent {
     private wasm: WasmGoService,
     private state: StateService,
   ) {}
+
+  ngOnInit() {
+    this.state.state.subscribe(async newContent => {
+      const metadata = newContent?.metadata;
+      if (metadata == null) {
+        return
+      }
+      this.name.setValue(metadata.name);
+      this.displayName.setValue(metadata.displayName);
+      this.description.setValue(metadata.description);
+    });
+  }
 
   onSave() {
     const newDevfile = this.wasm.setMetadata({
