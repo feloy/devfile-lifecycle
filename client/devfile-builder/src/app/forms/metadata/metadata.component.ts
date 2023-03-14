@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
 
+
 @Component({
   selector: 'app-metadata',
   templateUrl: './metadata.component.html',

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"syscall/js"
 
 	"github.com/feloy/devfile-lifecycle/pkg/graph"
@@ -15,15 +16,22 @@ import (
 var globalDevfile parser.DevfileObj
 var globalFS filesystem.Filesystem
 
-func SetDevfileContent(this js.Value, args []js.Value) interface{} {
-	parserArgs := parser.ParserArgs{
-		Data: []byte(args[0].String()),
-	}
+// setDevfileContent
 
+func SetDevfileContentWrapper(this js.Value, args []js.Value) interface{} {
+	return result(
+		setDevfileContent(args[0].String()),
+	)
+}
+
+func setDevfileContent(content string) (string, error) {
+	parserArgs := parser.ParserArgs{
+		Data: []byte(content),
+	}
 	var err error
 	globalDevfile, _, err = devfile.ParseDevfileAndValidate(parserArgs)
 	if err != nil {
-		return ""
+		return "", errors.New("error parsing devfile")
 	}
 	globalFS = filesystem.NewFakeFs()
 	globalDevfile.Ctx = context.FakeContext(globalFS, "/devfile.yaml")
@@ -31,8 +39,15 @@ func SetDevfileContent(this js.Value, args []js.Value) interface{} {
 	return getContent()
 }
 
-func SetMetadata(this js.Value, args []js.Value) interface{} {
-	metadata := args[0]
+// setMetadata
+
+func SetMetadataWrapper(this js.Value, args []js.Value) interface{} {
+	return result(
+		setMetadata(args[0]),
+	)
+}
+
+func setMetadata(metadata js.Value) (string, error) {
 	globalDevfile.Data.SetMetadata(apidevfile.DevfileMetadata{
 		Name:        metadata.Get("name").String(),
 		DisplayName: metadata.Get("displayName").String(),
@@ -41,30 +56,53 @@ func SetMetadata(this js.Value, args []js.Value) interface{} {
 	return getContent()
 }
 
-func GetFlowChart(this js.Value, args []js.Value) interface{} {
-	g, err := graph.Build(globalDevfile.Data)
-	if err != nil {
-		return ""
-	}
-	return g.ToFlowchart().String()
+// getFlowChart
+
+func GetFlowChartWrapper(this js.Value, args []js.Value) interface{} {
+	return result(
+		getFlowChart(),
+	)
 }
 
-func getContent() string {
+func getFlowChart() (string, error) {
+	g, err := graph.Build(globalDevfile.Data)
+	if err != nil {
+		return "", errors.New("error building graph")
+	}
+	return g.ToFlowchart().String(), nil
+}
+
+// common
+
+// getContent returns the YAML content of the global devfile as string
+func getContent() (string, error) {
 	err := globalDevfile.WriteYamlDevfile()
 	if err != nil {
-		return ""
+		return "", errors.New("error writing file")
 	}
 	result, err := globalFS.ReadFile("/devfile.yaml")
 	if err != nil {
-		return ""
+		return "", errors.New("error reading file")
 	}
-	return string(result)
+	return string(result), nil
+}
+
+// result returns the value and error in a format acceptable for JS
+func result(value interface{}, err error) map[string]interface{} {
+	errStr := ""
+	if err != nil {
+		errStr = err.Error()
+	}
+	return map[string]interface{}{
+		"value": value,
+		"err":   errStr,
+	}
 }
 
 func main() {
-	js.Global().Set("setDevfileContent", js.FuncOf(SetDevfileContent))
-	js.Global().Set("setMetadata", js.FuncOf(SetMetadata))
-	js.Global().Set("getFlowChart", js.FuncOf(GetFlowChart))
+	js.Global().Set("setDevfileContent", js.FuncOf(SetDevfileContentWrapper))
+	js.Global().Set("setMetadata", js.FuncOf(SetMetadataWrapper))
+	js.Global().Set("getFlowChart", js.FuncOf(GetFlowChartWrapper))
 
 	<-make(chan bool)
 }
