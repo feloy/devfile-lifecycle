@@ -24,14 +24,14 @@ func SetDevfileContentWrapper(this js.Value, args []js.Value) interface{} {
 	)
 }
 
-func setDevfileContent(content string) (string, error) {
+func setDevfileContent(content string) (map[string]interface{}, error) {
 	parserArgs := parser.ParserArgs{
 		Data: []byte(content),
 	}
 	var err error
 	globalDevfile, _, err = devfile.ParseDevfileAndValidate(parserArgs)
 	if err != nil {
-		return "", errors.New("error parsing devfile")
+		return nil, errors.New("error parsing devfile")
 	}
 	globalFS = filesystem.NewFakeFs()
 	globalDevfile.Ctx = context.FakeContext(globalFS, "/devfile.yaml")
@@ -47,7 +47,7 @@ func SetMetadataWrapper(this js.Value, args []js.Value) interface{} {
 	)
 }
 
-func setMetadata(metadata js.Value) (string, error) {
+func setMetadata(metadata js.Value) (map[string]interface{}, error) {
 	globalDevfile.Data.SetMetadata(apidevfile.DevfileMetadata{
 		Name:        metadata.Get("name").String(),
 		DisplayName: metadata.Get("displayName").String(),
@@ -75,16 +75,26 @@ func getFlowChart() (string, error) {
 // common
 
 // getContent returns the YAML content of the global devfile as string
-func getContent() (string, error) {
+func getContent() (map[string]interface{}, error) {
 	err := globalDevfile.WriteYamlDevfile()
 	if err != nil {
-		return "", errors.New("error writing file")
+		return nil, errors.New("error writing file")
 	}
 	result, err := globalFS.ReadFile("/devfile.yaml")
 	if err != nil {
-		return "", errors.New("error reading file")
+		return nil, errors.New("error reading file")
 	}
-	return string(result), nil
+
+	metadata := globalDevfile.Data.GetMetadata()
+	metadataResult := map[string]interface{}{
+		"name":        metadata.Name,
+		"displayName": metadata.DisplayName,
+		"description": metadata.Description,
+	}
+	return map[string]interface{}{
+		"content":  string(result),
+		"metadata": metadataResult,
+	}, nil
 }
 
 // result returns the value and error in a format acceptable for JS

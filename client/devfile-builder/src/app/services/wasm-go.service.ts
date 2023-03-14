@@ -2,9 +2,19 @@ import { Injectable } from '@angular/core';
 
 declare const Go: any;
 
-type Result = {
+type ChartResult = {
   err: string;
   value: any;
+};
+
+type Result = {
+  err: string;
+  value: ResultValue;
+};
+
+export type ResultValue = {
+  content: string;
+  metadata: Metadata;
 };
 
 type Metadata = {
@@ -13,7 +23,7 @@ type Metadata = {
   description: string | null;
 };
 
-declare const getFlowChart: () => Result;
+declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;
 declare const setMetadata: (metadata: Metadata) => Result;
 
@@ -33,19 +43,19 @@ export class WasmGoService {
   }
 
   // setDevfileContent calls the wasm module to reset the content of the Devfile
-  setDevfileContent(devfile: string): string {
+  setDevfileContent(devfile: string): ResultValue {
     const result = setDevfileContent(devfile);
-    return result["value"];
+    return result.value;
   }
 
-  setMetadata(metadata: Metadata): string {
+  setMetadata(metadata: Metadata): ResultValue {
     const result = setMetadata(metadata);
-    return result["value"];
+    return result.value;
   }
 
   // getFlowChart calls the wasm module to get the lifecycle of the Devfile in mermaid chart format
   getFlowChart(): string {
     const result = getFlowChart();
-    return result["value"];
+    return result.value;
   }
 }

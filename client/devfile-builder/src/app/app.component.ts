@@ -22,15 +22,15 @@ export class AppComponent implements OnInit {
   ) {}
 
     ngOnInit() {
-      this.state.state.subscribe(async newYaml => {
-        if (newYaml == "") {
+      this.state.state.subscribe(async newContent => {
+        if (newContent == null) {
           return;
         }
         const result = this.wasmGo.getFlowChart();
         const svg = await this.mermaid.getMermaidAsSVG(result);
         this.mermaidContent = svg;
   
-        this.devfileYaml = newYaml;
+        this.devfileYaml = newContent.content;
       });
     }
 
