@@ -7,9 +7,11 @@
 
         <div class="flex-child">
             <mat-tab-group>
-                <mat-tab label="Metadata"> ... </mat-tab>
+                <mat-tab label="Metadata">
+                    <app-metadata></app-metadata>
+                </mat-tab>
                 <mat-tab label="YAML">
-                    <textarea #input id="input" rows="30"></textarea>
+                    <textarea #input id="input" rows="30" [value]="devfileYaml"></textarea>
                     <button (click)="onButtonClick(input.value)">View lifecycle</button>        
                 </mat-tab>
             </mat-tab-group>

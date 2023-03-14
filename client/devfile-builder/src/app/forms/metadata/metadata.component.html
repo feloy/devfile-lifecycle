@@ -1,0 +1,16 @@
+<div class="main">
+    <mat-form-field appearance="outline" class="mid-width">
+        <mat-label>Name</mat-label>
+        <input matInput [formControl]="name">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="mid-width">
+        <mat-label>Display Name</mat-label>
+        <input matInput [formControl]="displayName">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput [formControl]="description" rows="4"></textarea>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" (click)="onSave()">Save</button>
+</div>

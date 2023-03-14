@@ -2,6 +2,7 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-main { padding: 32px; }
-.spacer { flex: 1 1 auto; }
+main { padding: 16px; }
+.spacer { flex: 1 1 auto;}
+
   
