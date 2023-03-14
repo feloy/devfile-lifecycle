@@ -21,18 +21,18 @@ export class AppComponent implements OnInit {
     private state: StateService,
   ) {}
 
-    ngOnInit() {
-      this.state.state.subscribe(async newContent => {
-        if (newContent == null) {
-          return;
-        }
-        const result = this.wasmGo.getFlowChart();
-        const svg = await this.mermaid.getMermaidAsSVG(result);
-        this.mermaidContent = svg;
-  
-        this.devfileYaml = newContent.content;
-      });
-    }
+  ngOnInit() {
+    this.state.state.subscribe(async newContent => {
+      if (newContent == null) {
+        return;
+      }
+      const result = this.wasmGo.getFlowChart();
+      const svg = await this.mermaid.getMermaidAsSVG(result);
+      this.mermaidContent = svg;
+
+      this.devfileYaml = newContent.content;
+    });
+  }
 
   async onButtonClick(content: string){
     const newContent = this.wasmGo.setDevfileContent(content);

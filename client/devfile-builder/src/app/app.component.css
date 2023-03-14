@@ -22,3 +22,7 @@ div.mermaid {
 button {
     margin-top: 20px;
 }
+
+mat-form-field.full-width { width: 100%; }
+
+div.tab-content { padding: 16px; }
