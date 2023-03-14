@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { StateService } from 'src/app/state.service';
-import { WasmGoService } from 'src/app/wasm-go.service';
+import { StateService } from 'src/app/services/state.service';
+import { WasmGoService } from 'src/app/services/wasm-go.service';
 
 @Component({
   selector: 'app-metadata',

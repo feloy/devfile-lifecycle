@@ -28,7 +28,7 @@ func SetDevfileContent(this js.Value, args []js.Value) interface{} {
 	globalFS = filesystem.NewFakeFs()
 	globalDevfile.Ctx = context.FakeContext(globalFS, "/devfile.yaml")
 
-	return nil
+	return getContent()
 }
 
 func SetMetadata(this js.Value, args []js.Value) interface{} {

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { WasmGoService } from './wasm-go.service';
+import { WasmGoService } from './services/wasm-go.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MermaidService } from './mermaid.service';
-import { StateService } from './state.service';
+import { MermaidService } from './services/mermaid.service';
+import { StateService } from './services/state.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
         if (newYaml == "") {
           return;
         }
-        console.log(newYaml);
         const result = this.wasmGo.getFlowChart();
         const svg = await this.mermaid.getMermaidAsSVG(result);
         this.mermaidContent = svg;
@@ -36,8 +35,8 @@ export class AppComponent implements OnInit {
     }
 
   async onButtonClick(content: string){
-    this.wasmGo.setDevfileContent(content);
-    this.state.changeDevfileYaml(content);
+    const newContent = this.wasmGo.setDevfileContent(content);
+    this.state.changeDevfileYaml(newContent);
   }
 
 }
