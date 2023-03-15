@@ -13,9 +13,11 @@ func setFreshDevfile() {
 
 func main() {
 	setFreshDevfile()
+
+	js.Global().Set("addContainer", js.FuncOf(exports.AddContainerWrapper))
+	js.Global().Set("getFlowChart", js.FuncOf(exports.GetFlowChartWrapper))
 	js.Global().Set("setDevfileContent", js.FuncOf(exports.SetDevfileContentWrapper))
 	js.Global().Set("setMetadata", js.FuncOf(exports.SetMetadataWrapper))
-	js.Global().Set("getFlowChart", js.FuncOf(exports.GetFlowChartWrapper))
 
 	<-make(chan bool)
 }

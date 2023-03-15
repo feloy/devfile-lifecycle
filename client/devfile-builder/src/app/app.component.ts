@@ -26,11 +26,14 @@ export class AppComponent implements OnInit {
       if (newContent == null) {
         return;
       }
-      const result = this.wasmGo.getFlowChart();
-      const svg = await this.mermaid.getMermaidAsSVG(result);
-      this.mermaidContent = svg;
 
       this.devfileYaml = newContent.content;
+
+      try {
+        const result = this.wasmGo.getFlowChart();
+        const svg = await this.mermaid.getMermaidAsSVG(result);
+        this.mermaidContent = svg;  
+      } catch {}
     });
   }
 

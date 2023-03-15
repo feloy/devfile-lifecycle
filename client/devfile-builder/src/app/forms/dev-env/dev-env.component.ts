@@ -31,10 +31,17 @@ export class DevEnvComponent implements OnInit {
   ngOnInit() {
     this.state.state.subscribe(async newContent => {
       console.log(newContent?.devEnvs)
+      
       if (!newContent) {
         this.showCreate = true;
         return;
       }
+
+      if (!newContent.devEnvs.length) {
+        this.showCreate = true;
+        return;
+      }
+
       this.devEnvs().clear();
       for (const devEnv of newContent.devEnvs) {
         this.addDevEnv(devEnv);
@@ -67,6 +74,17 @@ export class DevEnvComponent implements OnInit {
   createNew() {
     console.log(this.newName.value);
     console.log(this.newImage.value);
+    if (this.newName.value == null || this.newImage.value == null) {
+      // TODO should not happen with form validation
+      return;
+    }
+    const newDevfile = this.wasm.addContainer(this.newName.value, this.newImage.value);
+    this.state.changeDevfileYaml(newDevfile);
+    
+    this.resetNew();
+  }
+
+  resetNew() {
     this.newName.setValue("");
     this.newImage.setValue("");
     this.showCreate = false;

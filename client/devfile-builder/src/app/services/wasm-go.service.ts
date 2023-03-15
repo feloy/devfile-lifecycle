@@ -39,6 +39,7 @@ export type DevEnv = {
   image: string;
 }
 
+declare const addContainer: (name: string, image: string) => Result;
 declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;
 declare const setMetadata: (metadata: Metadata) => Result;
@@ -58,6 +59,17 @@ export class WasmGoService {
     });
   }
 
+  addContainer(name: string, image: string): ResultValue {
+    const result = addContainer(name, image);
+    return result.value;
+  }
+
+  // getFlowChart calls the wasm module to get the lifecycle of the Devfile in mermaid chart format
+  getFlowChart(): string {
+    const result = getFlowChart();
+    return result.value;
+  }
+
   // setDevfileContent calls the wasm module to reset the content of the Devfile
   setDevfileContent(devfile: string): ResultValue {
     const result = setDevfileContent(devfile);
@@ -69,9 +81,4 @@ export class WasmGoService {
     return result.value;
   }
 
-  // getFlowChart calls the wasm module to get the lifecycle of the Devfile in mermaid chart format
-  getFlowChart(): string {
-    const result = getFlowChart();
-    return result.value;
-  }
 }
