@@ -15,13 +15,29 @@ type Result = {
 export type ResultValue = {
   content: string;
   metadata: Metadata;
+  devEnvs: DevEnv[];
 };
 
-type Metadata = {
+export type Metadata = {
   name: string | null;
+  version: string | null;
   displayName: string | null;
   description: string | null;
+  tags: string | null;
+  architectures: string | null;
+  icon: string | null;
+  globalMemoryLimit: string | null;
+  projectType: string | null;
+  language: string | null;
+  website: string | null;
+  provider: string | null;
+  supportUrl: string | null;
 };
+
+export type DevEnv = {
+  name: string;
+  image: string;
+}
 
 declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;

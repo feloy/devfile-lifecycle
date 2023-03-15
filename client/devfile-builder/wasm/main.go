@@ -2,15 +2,22 @@ package main
 
 import (
 	"errors"
+	"strings"
 	"syscall/js"
 
 	"github.com/feloy/devfile-lifecycle/pkg/graph"
 
+	"github.com/devfile/api/v2/pkg/apis/workspaces/v1alpha2"
 	apidevfile "github.com/devfile/api/v2/pkg/devfile"
 	"github.com/devfile/library/v2/pkg/devfile"
 	"github.com/devfile/library/v2/pkg/devfile/parser"
 	context "github.com/devfile/library/v2/pkg/devfile/parser/context"
+	"github.com/devfile/library/v2/pkg/devfile/parser/data/v2/common"
 	"github.com/devfile/library/v2/pkg/testingutil/filesystem"
+)
+
+const (
+	SEPARATOR = ","
 )
 
 var globalDevfile parser.DevfileObj
@@ -49,9 +56,19 @@ func SetMetadataWrapper(this js.Value, args []js.Value) interface{} {
 
 func setMetadata(metadata js.Value) (map[string]interface{}, error) {
 	globalDevfile.Data.SetMetadata(apidevfile.DevfileMetadata{
-		Name:        metadata.Get("name").String(),
-		DisplayName: metadata.Get("displayName").String(),
-		Description: metadata.Get("description").String(),
+		Name:              metadata.Get("name").String(),
+		Version:           metadata.Get("version").String(),
+		DisplayName:       metadata.Get("displayName").String(),
+		Description:       metadata.Get("description").String(),
+		Tags:              splitTags(metadata.Get("tags").String()),
+		Architectures:     splitArchitectures(metadata.Get("architectures").String()),
+		Icon:              metadata.Get("icon").String(),
+		GlobalMemoryLimit: metadata.Get("globalMemoryLimit").String(),
+		ProjectType:       metadata.Get("projectType").String(),
+		Language:          metadata.Get("language").String(),
+		Website:           metadata.Get("website").String(),
+		Provider:          metadata.Get("provider").String(),
+		SupportUrl:        metadata.Get("supportUrl").String(),
 	})
 	return getContent()
 }
@@ -85,16 +102,86 @@ func getContent() (map[string]interface{}, error) {
 		return nil, errors.New("error reading file")
 	}
 
-	metadata := globalDevfile.Data.GetMetadata()
-	metadataResult := map[string]interface{}{
-		"name":        metadata.Name,
-		"displayName": metadata.DisplayName,
-		"description": metadata.Description,
+	devEnvs, err := getDevEnvs()
+	if err != nil {
+		return nil, errors.New("error getting development environments")
 	}
+
 	return map[string]interface{}{
 		"content":  string(result),
-		"metadata": metadataResult,
+		"metadata": getMetadata(),
+		"devEnvs":  devEnvs,
 	}, nil
+}
+
+func getMetadata() map[string]interface{} {
+	metadata := globalDevfile.Data.GetMetadata()
+	return map[string]interface{}{
+		"name":              metadata.Name,
+		"version":           metadata.Version,
+		"displayName":       metadata.DisplayName,
+		"description":       metadata.Description,
+		"tags":              strings.Join(metadata.Tags, SEPARATOR),
+		"architectures":     joinArchitectures(metadata.Architectures),
+		"icon":              metadata.Icon,
+		"globalMemoryLimit": metadata.GlobalMemoryLimit,
+		"projectType":       metadata.ProjectType,
+		"language":          metadata.Language,
+		"website":           metadata.Website,
+		"provider":          metadata.Provider,
+		"supportUrl":        metadata.SupportUrl,
+	}
+}
+
+func getDevEnvs() ([]interface{}, error) {
+	containers, err := globalDevfile.Data.GetComponents(common.DevfileOptions{
+		ComponentOptions: common.ComponentOptions{
+			ComponentType: v1alpha2.ContainerComponentType,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	result := make([]interface{}, 0, len(containers))
+	for _, container := range containers {
+		result = append(result, map[string]interface{}{
+			"name":  container.Name,
+			"image": container.ComponentUnion.Container.Image,
+		})
+	}
+	return result, nil
+}
+
+func joinArchitectures(architectures []apidevfile.Architecture) string {
+	strArchs := make([]string, len(architectures))
+	for i, arch := range architectures {
+		strArchs[i] = string(arch)
+	}
+	return strings.Join(strArchs, SEPARATOR)
+}
+
+func splitArchitectures(architectures string) []apidevfile.Architecture {
+	if architectures == "" {
+		return nil
+	}
+	parts := strings.Split(architectures, SEPARATOR)
+	result := make([]apidevfile.Architecture, len(parts))
+	for i, arch := range parts {
+		result[i] = apidevfile.Architecture(strings.Trim(arch, " "))
+	}
+	return result
+}
+
+func splitTags(tags string) []string {
+	if tags == "" {
+		return nil
+	}
+	parts := strings.Split(tags, SEPARATOR)
+	result := make([]string, len(parts))
+	for i, tag := range parts {
+		result[i] = strings.Trim(tag, " ")
+	}
+	return result
 }
 
 // result returns the value and error in a format acceptable for JS

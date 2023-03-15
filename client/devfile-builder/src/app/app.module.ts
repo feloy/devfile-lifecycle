@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -13,11 +14,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AppComponent } from './app.component';
 import { MetadataComponent } from './forms/metadata/metadata.component';
+import { DevEnvComponent } from './forms/dev-env/dev-env.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MetadataComponent
+    MetadataComponent,
+    DevEnvComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,7 @@ import { MetadataComponent } from './forms/metadata/metadata.component';
     ReactiveFormsModule,
 
     MatButtonModule,
+    MatCardModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
