@@ -9,21 +9,44 @@
                 <mat-card-content>
                     <div [formGroupName]="i">
                         <mat-form-field appearance="outline" class="mid-width">
-                            <mat-label><span>Name</span></mat-label>
-                            <input matInput formControlName="name">
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" class="mid-width">
                             <mat-label><span>Image</span></mat-label>
                             <input matInput formControlName="image">
                         </mat-form-field>            
                     </div>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-flat-button>Save</button>
+                    <button mat-flat-button (click)="save(i)">Save</button>
                     <button mat-flat-button>Delete</button>
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div *ngIf="!devEnvs().length"><i>No Development environment</i></div>
+        <div class="nothingHere" *ngIf="!devEnvs().length"><i>No Development environment</i></div>
+
+        <div class="newButton">
+            <button *ngIf="!showCreate" mat-flat-button (click)="showCreate = true">New Development Environment</button>
+        </div>
+
+        <mat-card *ngIf="showCreate">
+            <mat-card-header>
+                <mat-card-title>New Development Environment</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div>
+                    <mat-form-field appearance="outline" class="mid-width">
+                        <mat-label><span>Name</span></mat-label>
+                        <input matInput [formControl]="newName">
+                    </mat-form-field>            
+                    <mat-form-field appearance="outline" class="mid-width">
+                        <mat-label><span>Image</span></mat-label>
+                        <input matInput [formControl]="newImage">
+                    </mat-form-field>            
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-flat-button (click)="createNew()">Create</button>
+                <button mat-flat-button (click)="createCancel()">Cancel</button>
+            </mat-card-actions>
+        </mat-card>
+
     </form>
 </div>

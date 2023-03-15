@@ -15,7 +15,11 @@ export class DevEnvComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(
+  showCreate: boolean = false;
+  newName = new FormControl('');
+  newImage = new FormControl('');
+
+   constructor(
     private wasm: WasmGoService,
     private state: StateService,
   ) {
@@ -28,12 +32,14 @@ export class DevEnvComponent implements OnInit {
     this.state.state.subscribe(async newContent => {
       console.log(newContent?.devEnvs)
       if (!newContent) {
+        this.showCreate = true;
         return;
       }
       this.devEnvs().clear();
       for (const devEnv of newContent.devEnvs) {
         this.addDevEnv(devEnv);
       }
+      this.showCreate = false;
     });
   }
 
@@ -52,4 +58,21 @@ export class DevEnvComponent implements OnInit {
     return this.form.get('devEnvs') as FormArray;
   }
 
+  save(i: number) {
+    console.log(i);
+    const devEnvToSave = this.form.value['devEnvs'][i];
+    console.log(devEnvToSave);
+  }
+
+  createNew() {
+    console.log(this.newName.value);
+    console.log(this.newImage.value);
+    this.newName.setValue("");
+    this.newImage.setValue("");
+    this.showCreate = false;
+  }
+
+  createCancel() {
+    this.showCreate = false;
+  }
 }
