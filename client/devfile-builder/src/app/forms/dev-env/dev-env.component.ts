@@ -30,7 +30,6 @@ export class DevEnvComponent implements OnInit {
 
   ngOnInit() {
     this.state.state.subscribe(async newContent => {
-      console.log(newContent?.devEnvs)
       
       if (!newContent) {
         this.showCreate = true;
@@ -44,7 +43,15 @@ export class DevEnvComponent implements OnInit {
 
       this.devEnvs().clear();
       for (const devEnv of newContent.devEnvs) {
-        this.addDevEnv(devEnv);
+        const devEnv_i = this.addDevEnv(devEnv);
+
+        for (const command of devEnv.command) {
+          this.addCommand(devEnv_i, command);
+        }
+
+        for (const arg of devEnv.args) {
+          this.addArg(devEnv_i, arg);
+        }
       }
       this.showCreate = false;
     });
@@ -54,26 +61,42 @@ export class DevEnvComponent implements OnInit {
     return new FormGroup({
       name: new FormControl(devEnv.name),
       image: new FormControl(devEnv.image),
+      command: new FormArray([]),
+      args: new FormArray([]),
     })
   }
 
-  addDevEnv(devEnv: DevEnv) {
-    this.devEnvs().push(this.newDevEnv(devEnv))
+  addDevEnv(devEnv: DevEnv): number {
+    this.devEnvs().push(this.newDevEnv(devEnv));
+    return this.devEnvs().length-1;
   }
 
   devEnvs(): FormArray {
     return this.form.get('devEnvs') as FormArray;
   }
 
+  addCommand(devEnv_i: number, command: string) {
+    this.commands(devEnv_i).push(new FormControl(command));
+  }
+
+  commands(devEnv_i: number): FormArray {
+    return this.devEnvs().controls[devEnv_i].get('command') as FormArray;
+  }
+
+  addArg(devEnv_i: number, arg: string) {
+    this.args(devEnv_i).push(new FormControl(arg));
+  }
+
+  args(devEnv_i: number): FormArray {
+    return this.devEnvs().controls[devEnv_i].get('args') as FormArray;
+  }
+
   save(i: number) {
-    console.log(i);
     const devEnvToSave = this.form.value['devEnvs'][i];
     console.log(devEnvToSave);
   }
 
   createNew() {
-    console.log(this.newName.value);
-    console.log(this.newImage.value);
     if (this.newName.value == null || this.newImage.value == null) {
       // TODO should not happen with form validation
       return;

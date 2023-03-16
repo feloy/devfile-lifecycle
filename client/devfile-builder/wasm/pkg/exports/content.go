@@ -68,9 +68,21 @@ func getDevEnvs() ([]interface{}, error) {
 	}
 	result := make([]interface{}, 0, len(containers))
 	for _, container := range containers {
+		commands := make([]interface{}, len(container.ComponentUnion.Container.Command))
+		for i, command := range container.ComponentUnion.Container.Command {
+			commands[i] = command
+		}
+
+		args := make([]interface{}, len(container.ComponentUnion.Container.Args))
+		for i, arg := range container.ComponentUnion.Container.Args {
+			args[i] = arg
+		}
+
 		result = append(result, map[string]interface{}{
-			"name":  container.Name,
-			"image": container.ComponentUnion.Container.Image,
+			"name":    container.Name,
+			"image":   container.ComponentUnion.Container.Image,
+			"command": commands,
+			"args":    args,
 		})
 	}
 	return result, nil

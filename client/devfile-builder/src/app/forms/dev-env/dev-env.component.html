@@ -8,10 +8,37 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div [formGroupName]="i">
-                        <mat-form-field appearance="outline" class="mid-width">
+                        <mat-form-field appearance="outline" class="full-width">
                             <mat-label><span>Image</span></mat-label>
                             <input matInput formControlName="image">
                         </mat-form-field>            
+
+                        <span class="flex" formArrayName="command">
+                            <span *ngFor="let comm of commands(i).controls; let j=index">
+                                <mat-form-field class="inline" appearance="outline">
+                                    <mat-label><span>Command</span></mat-label>
+                                    <input matInput [formControlName]="j">
+                                </mat-form-field>    
+                            </span>
+                            <button *ngIf="commands(i).controls.length > 0" mat-icon-button (click)="addCommand(i, '')">
+                                <mat-icon>add</mat-icon>
+                            </button>                
+                            <button *ngIf="commands(i).controls.length == 0" mat-flat-button (click)="addCommand(i, '')">Add command</button>
+                        </span>
+
+                        <span class="flex" formArrayName="args">
+                            <span *ngFor="let arg of args(i).controls; let j=index">
+                                <mat-form-field class="inline" appearance="outline">
+                                    <mat-label><span>Arg</span></mat-label>
+                                    <input matInput [formControlName]="j">
+                                </mat-form-field>    
+                            </span>
+                            <button *ngIf="args(i).controls.length > 0" mat-icon-button (click)="addArg(i, '')">
+                                <mat-icon>add</mat-icon>
+                            </button>                
+                            <button *ngIf="args(i).controls.length == 0" mat-flat-button (click)="addArg(i, '')">Add arg</button>
+                        </span>
+
                     </div>
                 </mat-card-content>
                 <mat-card-actions>

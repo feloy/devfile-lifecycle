@@ -37,6 +37,8 @@ export type Metadata = {
 export type DevEnv = {
   name: string;
   image: string;
+  command: string[];
+  args: string[];
 }
 
 declare const addContainer: (name: string, image: string) => Result;
