@@ -16,8 +16,6 @@ export class DevEnvComponent implements OnInit {
   form: FormGroup;
 
   showCreate: boolean = false;
-  newName = new FormControl('');
-  newImage = new FormControl('');
 
    constructor(
     private wasm: WasmGoService,
@@ -91,26 +89,6 @@ export class DevEnvComponent implements OnInit {
     return this.devEnvs().controls[devEnv_i].get('args') as FormArray;
   }
 
-  createNew() {
-    if (this.newName.value == null || this.newImage.value == null) {
-      // TODO should not happen with form validation
-      return;
-    }
-    const newDevfile = this.wasm.addContainer(this.newName.value, this.newImage.value);
-    this.state.changeDevfileYaml(newDevfile);
-    
-    this.resetNew();
-  }
-
-  resetNew() {
-    this.newName.setValue("");
-    this.newImage.setValue("");
-    this.showCreate = false;
-  }
-
-  createCancel() {
-    this.showCreate = false;
-  }
 
   update(i: number) {
     const devEnvToSave: DevEnv = this.form.value['devEnvs'][i];

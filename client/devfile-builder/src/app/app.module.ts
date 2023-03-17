@@ -15,12 +15,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppComponent } from './app.component';
 import { MetadataComponent } from './forms/metadata/metadata.component';
 import { DevEnvComponent } from './forms/dev-env/dev-env.component';
+import { NewDevEnvComponent } from './forms/new-dev-env/new-dev-env.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MetadataComponent,
-    DevEnvComponent
+    DevEnvComponent,
+    NewDevEnvComponent
   ],
   imports: [
     BrowserModule,
