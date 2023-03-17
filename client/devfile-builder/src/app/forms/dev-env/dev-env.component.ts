@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
-import { Observable } from 'rxjs';
-
 import { StateService } from 'src/app/services/state.service';
 import { DevEnv, WasmGoService } from 'src/app/services/wasm-go.service';
 
@@ -42,6 +40,15 @@ export class DevEnvComponent implements OnInit {
       this.devEnvs().clear();
       for (const devEnv of newContent.devEnvs) {
         const devEnv_i = this.addDevEnv(devEnv);
+
+        for (const userCommand of devEnv.userCommands) {
+          this.userCommands(devEnv_i).push(new FormGroup({
+            name: new FormControl(userCommand.name),
+            commandLine: new FormControl(userCommand.commandLine),
+            hotReloadCapable: new FormControl(userCommand.hotReloadCapable),
+            workingDir: new FormControl(userCommand.workingDir),
+          }));
+        }
       }
       this.showCreate = false;
     });
@@ -53,6 +60,7 @@ export class DevEnvComponent implements OnInit {
       image: new FormControl(devEnv.image),
       command: new FormControl(devEnv.command),
       args: new FormControl(devEnv.args),
+      userCommands: new FormArray([]),
     })
   }
 
@@ -63,6 +71,10 @@ export class DevEnvComponent implements OnInit {
 
   devEnvs(): FormArray {
     return this.form.get('devEnvs') as FormArray;
+  }
+
+  userCommands(devEnv_i: number): FormArray {
+    return this.devEnvs().controls[devEnv_i].get("userCommands") as FormArray;
   }
 
   update(i: number) {

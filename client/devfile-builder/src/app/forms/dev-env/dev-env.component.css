@@ -4,3 +4,4 @@ mat-form-field.mid-width { width: 50%; }
 mat-card { margin-top: 16px; }
 mat-card-content { padding: 16px; }
 .nothingHere { text-align: center; }
+h2 > div.subtitle { font-size: smaller; color: #0000008A; }

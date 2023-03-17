@@ -7,6 +7,7 @@ import (
 	"github.com/devfile/api/v2/pkg/apis/workspaces/v1alpha2"
 	apidevfile "github.com/devfile/api/v2/pkg/devfile"
 	"github.com/devfile/library/v2/pkg/devfile/parser/data/v2/common"
+	"k8s.io/utils/pointer"
 
 	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/global"
 )
@@ -78,11 +79,42 @@ func getDevEnvs() ([]interface{}, error) {
 			args[i] = arg
 		}
 
+		userCommands, err := getUserCommands(container.Name)
+		if err != nil {
+			return nil, err
+		}
+
 		result = append(result, map[string]interface{}{
-			"name":    container.Name,
-			"image":   container.ComponentUnion.Container.Image,
-			"command": commands,
-			"args":    args,
+			"name":         container.Name,
+			"image":        container.ComponentUnion.Container.Image,
+			"command":      commands,
+			"args":         args,
+			"userCommands": userCommands,
+		})
+	}
+	return result, nil
+}
+
+func getUserCommands(component string) ([]interface{}, error) {
+	result := []interface{}{}
+
+	commands, err := global.Devfile.Data.GetCommands(common.DevfileOptions{
+		CommandOptions: common.CommandOptions{
+			CommandType: v1alpha2.ExecCommandType,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	for _, command := range commands {
+		if command.Exec.Component != component {
+			continue
+		}
+		result = append(result, map[string]interface{}{
+			"name":             command.Id,
+			"commandLine":      command.CommandUnion.Exec.CommandLine,
+			"hotReloadCapable": pointer.BoolDeref(command.CommandUnion.Exec.HotReloadCapable, false),
+			"workingDir":       command.CommandUnion.Exec.WorkingDir,
 		})
 	}
 	return result, nil

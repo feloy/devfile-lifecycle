@@ -15,6 +15,7 @@ func main() {
 	setFreshDevfile()
 
 	js.Global().Set("addContainer", js.FuncOf(exports.AddContainerWrapper))
+	js.Global().Set("addUserCommand", js.FuncOf(exports.AddUserCommandWrapper))
 	js.Global().Set("getFlowChart", js.FuncOf(exports.GetFlowChartWrapper))
 	js.Global().Set("setDevfileContent", js.FuncOf(exports.SetDevfileContentWrapper))
 	js.Global().Set("setMetadata", js.FuncOf(exports.SetMetadataWrapper))

@@ -1,26 +1,50 @@
 <div class="main">
     <form [formGroup]="form">
         <div *ngIf="devEnvs().length" formArrayName="devEnvs">
-            <mat-card *ngFor="let devEnv of devEnvs().controls; let i=index">
-                <mat-card-header>
-                    <mat-card-title>{{devEnv.get("name")?.getRawValue()}}</mat-card-title>
-                    <mat-card-subtitle>Development Environment</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
+            <div *ngFor="let devEnv of devEnvs().controls; let i=index">
+                    <h2>{{devEnv.get("name")?.getRawValue()}}<div class="subtitle">Development environment</div></h2>
                     <div [formGroupName]="i">
-                        <mat-form-field appearance="outline" class="full-width">
-                            <mat-label><span>Image</span></mat-label>
-                            <input matInput formControlName="image">
-                        </mat-form-field>
-                        <app-multi-text formControlName="command" label="Command" addLabel="Add command"></app-multi-text>
-                        <app-multi-text formControlName="args" label="Arg" addLabel="Add arg"></app-multi-text>
+
+                        <mat-card>
+                            <mat-card-header><mat-card-title>Container</mat-card-title></mat-card-header>
+                            <mat-card-content>
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label><span>Image</span></mat-label>
+                                    <input matInput formControlName="image">
+                                </mat-form-field>
+                                <app-multi-text formControlName="command" label="Command" addLabel="Add command"></app-multi-text>
+                                <app-multi-text formControlName="args" label="Arg" addLabel="Add arg"></app-multi-text>
+                            </mat-card-content>
+
+                            <mat-card-actions>
+                                <button mat-flat-button (click)="update(i)">Save</button>
+                                <button mat-flat-button>Delete</button>
+                            </mat-card-actions>
+                        </mat-card>
+
+                        <div formArrayName="userCommands">
+                            <mat-card *ngFor="let userCommand of userCommands(i).controls; let j=index" [formGroupName]="j">
+                                <mat-card-header>
+                                    <mat-card-title>{{userCommand.get('name')?.getRawValue()}}</mat-card-title>
+                                    <mat-card-subtitle>Command</mat-card-subtitle>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <mat-form-field appearance="outline" class="mid-width">
+                                        <mat-label><span>Command Line</span></mat-label>
+                                        <input matInput formControlName="commandLine">
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" class="mid-width">
+                                        <mat-label><span>Working Dir</span></mat-label>
+                                        <input matInput formControlName="workingDir">
+                                    </mat-form-field>
+                                    <mat-checkbox formControlName="hotReloadCapable">Hot Reload Capable</mat-checkbox>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+
+                        <app-new-user-command [devEnvName]="devEnv.get('name')?.getRawValue()"></app-new-user-command>
                     </div>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-flat-button (click)="update(i)">Save</button>
-                    <button mat-flat-button>Delete</button>
-                </mat-card-actions>
-            </mat-card>
+            </div>
         </div>
         <div class="nothingHere" *ngIf="!devEnvs().length"><i>No Development environment</i></div>
 
