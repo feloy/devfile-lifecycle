@@ -45,6 +45,7 @@ declare const addContainer: (name: string, image: string) => Result;
 declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;
 declare const setMetadata: (metadata: Metadata) => Result;
+declare const updateContainer: (name: string, image: string, command: string[], args: string[]) => Result;
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,16 @@ export class WasmGoService {
   addContainer(name: string, image: string): ResultValue {
     const result = addContainer(name, image);
     return result.value;
+  }
+
+  updateContainer(devEnv: DevEnv): ResultValue {
+    const result = updateContainer(
+      devEnv.name,
+      devEnv.image,
+      devEnv.command,
+      devEnv.args,
+      );
+    return result.value;  
   }
 
   // getFlowChart calls the wasm module to get the lifecycle of the Devfile in mermaid chart format

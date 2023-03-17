@@ -91,11 +91,6 @@ export class DevEnvComponent implements OnInit {
     return this.devEnvs().controls[devEnv_i].get('args') as FormArray;
   }
 
-  save(i: number) {
-    const devEnvToSave = this.form.value['devEnvs'][i];
-    console.log(devEnvToSave);
-  }
-
   createNew() {
     if (this.newName.value == null || this.newImage.value == null) {
       // TODO should not happen with form validation
@@ -116,4 +111,11 @@ export class DevEnvComponent implements OnInit {
   createCancel() {
     this.showCreate = false;
   }
+
+  update(i: number) {
+    const devEnvToSave: DevEnv = this.form.value['devEnvs'][i];
+    const newDevfile = this.wasm.updateContainer(devEnvToSave);
+    this.state.changeDevfileYaml(newDevfile);
+  }
+
 }

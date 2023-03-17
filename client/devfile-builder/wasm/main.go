@@ -18,6 +18,7 @@ func main() {
 	js.Global().Set("getFlowChart", js.FuncOf(exports.GetFlowChartWrapper))
 	js.Global().Set("setDevfileContent", js.FuncOf(exports.SetDevfileContentWrapper))
 	js.Global().Set("setMetadata", js.FuncOf(exports.SetMetadataWrapper))
+	js.Global().Set("updateContainer", js.FuncOf(exports.UpdateContainerWrapper))
 
 	<-make(chan bool)
 }
