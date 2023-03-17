@@ -42,14 +42,6 @@ export class DevEnvComponent implements OnInit {
       this.devEnvs().clear();
       for (const devEnv of newContent.devEnvs) {
         const devEnv_i = this.addDevEnv(devEnv);
-
-        for (const command of devEnv.command) {
-          this.addCommand(devEnv_i, command);
-        }
-
-        for (const arg of devEnv.args) {
-          this.addArg(devEnv_i, arg);
-        }
       }
       this.showCreate = false;
     });
@@ -59,8 +51,8 @@ export class DevEnvComponent implements OnInit {
     return new FormGroup({
       name: new FormControl(devEnv.name),
       image: new FormControl(devEnv.image),
-      command: new FormArray([]),
-      args: new FormArray([]),
+      command: new FormControl(devEnv.command),
+      args: new FormControl(devEnv.args),
     })
   }
 
@@ -72,23 +64,6 @@ export class DevEnvComponent implements OnInit {
   devEnvs(): FormArray {
     return this.form.get('devEnvs') as FormArray;
   }
-
-  addCommand(devEnv_i: number, command: string) {
-    this.commands(devEnv_i).push(new FormControl(command));
-  }
-
-  commands(devEnv_i: number): FormArray {
-    return this.devEnvs().controls[devEnv_i].get('command') as FormArray;
-  }
-
-  addArg(devEnv_i: number, arg: string) {
-    this.args(devEnv_i).push(new FormControl(arg));
-  }
-
-  args(devEnv_i: number): FormArray {
-    return this.devEnvs().controls[devEnv_i].get('args') as FormArray;
-  }
-
 
   update(i: number) {
     const devEnvToSave: DevEnv = this.form.value['devEnvs'][i];

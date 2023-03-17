@@ -16,13 +16,15 @@ import { AppComponent } from './app.component';
 import { MetadataComponent } from './forms/metadata/metadata.component';
 import { DevEnvComponent } from './forms/dev-env/dev-env.component';
 import { NewDevEnvComponent } from './forms/new-dev-env/new-dev-env.component';
+import { MultiTextComponent } from './controls/multi-text/multi-text.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MetadataComponent,
     DevEnvComponent,
-    NewDevEnvComponent
+    NewDevEnvComponent,
+    MultiTextComponent
   ],
   imports: [
     BrowserModule,
