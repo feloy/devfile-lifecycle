@@ -112,6 +112,8 @@ func getUserCommands(component string) ([]interface{}, error) {
 		}
 		result = append(result, map[string]interface{}{
 			"name":             command.Id,
+			"group":            getGroup(command),
+			"default":          getDefault(command),
 			"commandLine":      command.CommandUnion.Exec.CommandLine,
 			"hotReloadCapable": pointer.BoolDeref(command.CommandUnion.Exec.HotReloadCapable, false),
 			"workingDir":       command.CommandUnion.Exec.WorkingDir,
@@ -126,4 +128,24 @@ func joinArchitectures(architectures []apidevfile.Architecture) string {
 		strArchs[i] = string(arch)
 	}
 	return strings.Join(strArchs, SEPARATOR)
+}
+
+func getGroup(command v1alpha2.Command) string {
+	if command.Exec == nil {
+		return ""
+	}
+	if command.Exec.Group == nil {
+		return ""
+	}
+	return string(command.Exec.Group.Kind)
+}
+
+func getDefault(command v1alpha2.Command) bool {
+	if command.Exec == nil {
+		return false
+	}
+	if command.Exec.Group == nil {
+		return false
+	}
+	return pointer.BoolDeref(command.Exec.Group.IsDefault, false)
 }

@@ -15,7 +15,10 @@ export class DevEnvComponent implements OnInit {
 
   showCreate: boolean = false;
 
-   constructor(
+  groupsValues = ['(no group)', 'build', 'test', 'run', 'debug', 'deploy'];
+  groupsKeys = ['', 'build', 'test', 'run', 'debug', 'deploy'];
+
+  constructor(
     private wasm: WasmGoService,
     private state: StateService,
   ) {
@@ -40,6 +43,8 @@ export class DevEnvComponent implements OnInit {
         for (const userCommand of devEnv.userCommands) {
           this.userCommands(devEnv_i).push(new FormGroup({
             name: new FormControl(userCommand.name),
+            group: new FormControl(userCommand.group),
+            default: new FormControl(userCommand.default),
             commandLine: new FormControl(userCommand.commandLine),
             hotReloadCapable: new FormControl(userCommand.hotReloadCapable),
             workingDir: new FormControl(userCommand.workingDir),
@@ -75,6 +80,7 @@ export class DevEnvComponent implements OnInit {
 
   update(i: number) {
     const devEnvToSave: DevEnv = this.form.value['devEnvs'][i];
+    console.log(devEnvToSave);
     const newDevfile = this.wasm.updateContainer(devEnvToSave);
     this.state.changeDevfileYaml(newDevfile);
   }

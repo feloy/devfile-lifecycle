@@ -4,6 +4,8 @@ import "syscall/js"
 
 type userCommand struct {
 	Name             string
+	Group            string
+	Default          bool
 	CommandLine      string
 	HotReloadCapable bool
 	WorkingDir       string
@@ -28,6 +30,8 @@ func getUserCommandArray(value js.Value) []userCommand {
 		v := value.Index(i)
 		result = append(result, userCommand{
 			Name:             v.Get("name").String(),
+			Group:            v.Get("group").String(),
+			Default:          v.Get("default").Bool(),
 			CommandLine:      v.Get("commandLine").String(),
 			HotReloadCapable: v.Get("hotReloadCapable").Bool(),
 			WorkingDir:       v.Get("workingDir").String(),

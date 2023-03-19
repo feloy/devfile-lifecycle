@@ -42,8 +42,12 @@ export type DevEnv = {
   userCommands: UserCommand[];
 }
 
+export type Group = '' | 'build' | 'test'| 'run'  | 'debug' | 'deploy';
+
 export type UserCommand = {
   name: string;
+  group: Group;
+  default: boolean;
   commandLine: string;
   hotReloadCapable: boolean;
   workInSourceDir: boolean;

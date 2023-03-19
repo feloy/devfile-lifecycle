@@ -41,6 +41,9 @@ func updateContainer(name string, image string, command []string, args []string,
 	// TODO(feloy) Deletion fails if done in increasing order
 	for i := len(allCommands) - 1; i >= 0; i-- {
 		command := allCommands[i]
+		if command.Exec.Component != name {
+			continue
+		}
 		err = global.Devfile.Data.DeleteCommand(command.Id)
 		if err != nil {
 			return nil, err
@@ -50,7 +53,7 @@ func updateContainer(name string, image string, command []string, args []string,
 	commands := make([]v1alpha2.Command, len(userCommands))
 	for i := range userCommands {
 		userCommand := userCommands[i]
-		commands[i] = v1alpha2.Command{
+		newCommand := v1alpha2.Command{
 			Id: userCommand.Name,
 			CommandUnion: v1alpha2.CommandUnion{
 				Exec: &v1alpha2.ExecCommand{
@@ -61,6 +64,13 @@ func updateContainer(name string, image string, command []string, args []string,
 				},
 			},
 		}
+		if userCommand.Group != "" {
+			newCommand.Exec.Group = &v1alpha2.CommandGroup{
+				Kind:      v1alpha2.CommandGroupKind(userCommand.Group),
+				IsDefault: &userCommand.Default,
+			}
+		}
+		commands[i] = newCommand
 	}
 	err = global.Devfile.Data.AddCommands(commands)
 	if err != nil {
