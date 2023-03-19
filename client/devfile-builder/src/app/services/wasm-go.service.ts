@@ -46,6 +46,7 @@ export type UserCommand = {
   name: string;
   commandLine: string;
   hotReloadCapable: boolean;
+  workInSourceDir: boolean;
   workingDir: string;
 };
 
@@ -54,7 +55,7 @@ declare const addUserCommand: (component: string, name: string, commandLine: str
 declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;
 declare const setMetadata: (metadata: Metadata) => Result;
-declare const updateContainer: (name: string, image: string, command: string[], args: string[]) => Result;
+declare const updateContainer: (name: string, image: string, command: string[], args: string[], userCommands: UserCommand[]) => Result;
 
 @Injectable({
   providedIn: 'root'
@@ -87,7 +88,11 @@ export class WasmGoService {
       devEnv.image,
       devEnv.command,
       devEnv.args,
+      devEnv.userCommands,
     );
+    if (result.err != "") {
+      console.log(result.err);
+    }
     return result.value;  
   }
 

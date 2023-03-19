@@ -1,6 +1,6 @@
 <main>
     <div class="newButton">
-        <button *ngIf="!showForm" mat-flat-button (click)="showForm = true">New Command</button>
+        <button [matTooltip]="'add command to env &#34;'+devEnvName+'&#34;'"  *ngIf="!showForm" mat-flat-button (click)="showForm = true">New Command</button>
     </div>
     
     <mat-card *ngIf="showForm">

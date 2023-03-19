@@ -27,12 +27,8 @@ export class DevEnvComponent implements OnInit {
   ngOnInit() {
     this.state.state.subscribe(async newContent => {
       
-      if (!newContent) {
-        this.showCreate = true;
-        return;
-      }
-
-      if (!newContent.devEnvs.length) {
+      console.log(newContent);
+      if (!newContent?.devEnvs?.length) {
         this.showCreate = true;
         return;
       }

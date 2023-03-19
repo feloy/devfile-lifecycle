@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { AppComponent } from './app.component';
 import { MetadataComponent } from './forms/metadata/metadata.component';
@@ -41,6 +42,7 @@ import { NewUserCommandComponent } from './forms/new-user-command/new-user-comma
     MatInputModule,
     MatTabsModule,
     MatToolbarModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]
