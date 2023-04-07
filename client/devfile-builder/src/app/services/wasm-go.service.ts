@@ -17,6 +17,7 @@ export type ResultValue = {
   metadata: Metadata;
   commands: Command[];
   containers: Container[];
+  images: Image[];
   resources: ClusterResource[];
   devEnvs: DevEnv[];
 };
@@ -68,6 +69,15 @@ export type Container = {
   args: string[];
 };
 
+export type Image = {
+  name: string;
+  imageName: string;
+  args: string[];
+  buildContext: string;
+  rootRequired: boolean;
+  uri: string;
+};
+
 export type ClusterResource = {
   name: string;
   inlined: string;
@@ -95,6 +105,7 @@ export type UserCommand = {
 };
 
 declare const addContainer: (name: string, image: string, command: string[], args: string[]) => Result;
+declare const addImage: (name: string, imageName: string, args: string[], buildContext: string, rootRequired: boolean, uri: string) => Result;
 declare const addResource: (name: string, inlined: string) => Result;
 declare const addExecCommand: (name: string, component: string, commmandLine: string, workingDir: string, hotReloadCapable: boolean) => Result;
 declare const addApplyCommand: (name: string, component: string) => Result;
@@ -125,6 +136,18 @@ export class WasmGoService {
       container.image,
       container.command,
       container.args,
+    );
+    return result.value;
+  }
+
+  addImage(image: Image): ResultValue {
+    const result = addImage(
+      image.name,
+      image.imageName,
+      image.args,
+      image.buildContext,
+      image.rootRequired,
+      image.uri,
     );
     return result.value;
   }

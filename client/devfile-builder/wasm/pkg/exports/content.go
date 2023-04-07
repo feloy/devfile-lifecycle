@@ -37,6 +37,11 @@ func getContent() (map[string]interface{}, error) {
 		return nil, errors.New("error getting containers")
 	}
 
+	images, err := getImages()
+	if err != nil {
+		return nil, errors.New("error getting images")
+	}
+
 	resources, err := getResources()
 	if err != nil {
 		return nil, errors.New("error getting Kubernetes resources")
@@ -52,6 +57,7 @@ func getContent() (map[string]interface{}, error) {
 		"metadata":   getMetadata(),
 		"commands":   commands,
 		"containers": containers,
+		"images":     images,
 		"resources":  resources,
 		"devEnvs":    devEnvs,
 	}, nil
@@ -142,6 +148,35 @@ func getContainers() ([]interface{}, error) {
 			"image":   container.ComponentUnion.Container.Image,
 			"command": commands,
 			"args":    args,
+		})
+	}
+	return result, nil
+}
+
+func getImages() ([]interface{}, error) {
+	images, err := global.Devfile.Data.GetComponents(common.DevfileOptions{
+		ComponentOptions: common.ComponentOptions{
+			ComponentType: v1alpha2.ImageComponentType,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	result := make([]interface{}, 0, len(images))
+	for _, image := range images {
+
+		args := make([]interface{}, len(image.Image.Dockerfile.Args))
+		for i, arg := range image.Image.Dockerfile.Args {
+			args[i] = arg
+		}
+
+		result = append(result, map[string]interface{}{
+			"name":         image.Name,
+			"imageName":    image.Image.ImageName,
+			"args":         args,
+			"buildContext": image.Image.Dockerfile.BuildContext,
+			"rootRequired": pointer.BoolDeref(image.Image.Dockerfile.RootRequired, false),
+			"uri":          image.Image.Dockerfile.Uri,
 		})
 	}
 	return result, nil
