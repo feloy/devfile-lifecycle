@@ -15,6 +15,7 @@ func main() {
 	setFreshDevfile()
 
 	js.Global().Set("addContainer", js.FuncOf(exports.AddContainerWrapper))
+	js.Global().Set("addResource", js.FuncOf(exports.AddResourceWrapper))
 	js.Global().Set("addExecCommand", js.FuncOf(exports.AddExecCommandWrapper))
 	js.Global().Set("addApplyCommand", js.FuncOf(exports.AddApplyCommandWrapper))
 	js.Global().Set("addUserCommand", js.FuncOf(exports.AddUserCommandWrapper))

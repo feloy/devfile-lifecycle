@@ -14,7 +14,7 @@
             <mat-label><span>Working Dir</span></mat-label>
             <input matInput formControlName="workingDir">
         </mat-form-field>
-        <app-select-container formControlName="component" [containers]="containerList"></app-select-container>
+        <app-select-container formControlName="component" label="Container" [containers]="containerList"></app-select-container>
     </form>
 
     <button mat-flat-button color="primary" matTooltip="create new Exec Command" (click)="create()">Create</button>

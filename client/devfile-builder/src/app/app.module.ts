@@ -27,6 +27,8 @@ import { CommandExecComponent } from './forms/command-exec/command-exec.componen
 import { CommandApplyComponent } from './forms/command-apply/command-apply.component';
 import { CommandCompositeComponent } from './forms/command-composite/command-composite.component';
 import { SelectContainerComponent } from './controls/select-container/select-container.component';
+import { ResourcesComponent } from './tabs/resources/resources.component';
+import { ResourceComponent } from './forms/resource/resource.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,8 @@ import { SelectContainerComponent } from './controls/select-container/select-con
     CommandApplyComponent,
     CommandCompositeComponent,
     SelectContainerComponent,
+    ResourcesComponent,
+    ResourceComponent,
   ],
   imports: [
     BrowserModule,

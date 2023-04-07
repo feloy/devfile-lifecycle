@@ -16,6 +16,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class SelectContainerComponent implements ControlValueAccessor {
   
   @Input() containers: string[] = [];
+  @Input() label: string = "";
 
   container: string = "";
 

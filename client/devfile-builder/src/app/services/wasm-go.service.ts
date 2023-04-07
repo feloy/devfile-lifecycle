@@ -95,6 +95,7 @@ export type UserCommand = {
 };
 
 declare const addContainer: (name: string, image: string, command: string[], args: string[]) => Result;
+declare const addResource: (name: string, inlined: string) => Result;
 declare const addExecCommand: (name: string, component: string, commmandLine: string, workingDir: string, hotReloadCapable: boolean) => Result;
 declare const addApplyCommand: (name: string, component: string) => Result;
 declare const addUserCommand: (component: string, name: string, commandLine: string) => Result;
@@ -124,6 +125,14 @@ export class WasmGoService {
       container.image,
       container.command,
       container.args,
+    );
+    return result.value;
+  }
+
+  addResource(resource: ClusterResource): ResultValue {
+    const result = addResource(
+      resource.name,
+      resource.inlined,
     );
     return result.value;
   }
