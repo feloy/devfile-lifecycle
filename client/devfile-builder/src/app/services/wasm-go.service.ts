@@ -15,6 +15,7 @@ type Result = {
 export type ResultValue = {
   content: string;
   metadata: Metadata;
+  commands: Command[];
   containers: Container[];
   devEnvs: DevEnv[];
 };
@@ -33,6 +34,30 @@ export type Metadata = {
   website: string | null;
   provider: string | null;
   supportUrl: string | null;
+};
+
+export type Command = {
+  name: string;
+  type: "exec" | "apply" | "composite";
+  exec: ExecCommand | undefined;
+  apply: ApplyCommand | undefined;
+  composite: CompositeCommand | undefined;
+};
+
+export type ExecCommand = {
+  component: string;
+  commandLine: string;
+  workingDir: string;
+  hotReloadCapable: boolean;
+};
+
+export type ApplyCommand = {
+  component: string;
+};
+
+export type CompositeCommand = {
+  commands: string;
+  parallel: boolean;
 };
 
 export type Container = {

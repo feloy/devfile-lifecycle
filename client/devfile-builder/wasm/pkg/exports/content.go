@@ -27,6 +27,11 @@ func getContent() (map[string]interface{}, error) {
 		return nil, errors.New("error reading file")
 	}
 
+	commands, err := getCommands()
+	if err != nil {
+		return nil, errors.New("error getting commands")
+	}
+
 	containers, err := getContainers()
 	if err != nil {
 		return nil, errors.New("error getting containers")
@@ -40,6 +45,7 @@ func getContent() (map[string]interface{}, error) {
 	return map[string]interface{}{
 		"content":    string(result),
 		"metadata":   getMetadata(),
+		"commands":   commands,
 		"containers": containers,
 		"devEnvs":    devEnvs,
 	}, nil
@@ -62,6 +68,46 @@ func getMetadata() map[string]interface{} {
 		"provider":          metadata.Provider,
 		"supportUrl":        metadata.SupportUrl,
 	}
+}
+
+func getCommands() ([]interface{}, error) {
+	commands, err := global.Devfile.Data.GetCommands(common.DevfileOptions{})
+	if err != nil {
+		return nil, err
+	}
+	result := make([]interface{}, 0, len(commands))
+	for _, command := range commands {
+		newCommand := map[string]interface{}{
+			"name": command.Id,
+		}
+
+		if command.Exec != nil {
+			newCommand["type"] = "exec"
+			newCommand["exec"] = map[string]interface{}{
+				"component":        command.Exec.Component,
+				"commandLine":      command.Exec.CommandLine,
+				"workingDir":       command.Exec.WorkingDir,
+				"hotReloadCapable": pointer.BoolDeref(command.Exec.HotReloadCapable, false),
+			}
+		}
+
+		if command.Apply != nil {
+			newCommand["type"] = "apply"
+			newCommand["apply"] = map[string]interface{}{
+				"component": command.Apply.Component,
+			}
+		}
+
+		if command.Composite != nil {
+			newCommand["type"] = "composite"
+			newCommand["composite"] = map[string]interface{}{
+				"commands": strings.Join(command.Composite.Commands, ","),
+				"parallel": pointer.BoolDeref(command.Composite.Parallel, false),
+			}
+		}
+		result = append(result, newCommand)
+	}
+	return result, nil
 }
 
 func getContainers() ([]interface{}, error) {
