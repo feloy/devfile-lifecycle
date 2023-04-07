@@ -16,8 +16,8 @@ export class ContainerComponent {
     private state: StateService,
   ) {
     this.form = new FormGroup({
-      name: new FormControl(),
-      image: new FormControl(),
+      name: new FormControl(""),
+      image: new FormControl(""),
       command: new FormControl([]),
       args: new FormControl([]),
     })

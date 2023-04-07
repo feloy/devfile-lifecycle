@@ -9,6 +9,10 @@ import { Command } from 'src/app/services/wasm-go.service';
 })
 export class CommandsComponent {
 
+  forceDisplayExecForm: boolean = false;
+  forceDisplayApplyForm: boolean = false;
+  forceDisplayCompositeForm: boolean = false;
+
   commands: Command[] | undefined = [];
 
   constructor(
@@ -22,7 +26,22 @@ export class CommandsComponent {
       if (this.commands == null) {
         return
       }
+      that.forceDisplayExecForm = false;
+      this.forceDisplayApplyForm = false;
+      this.forceDisplayCompositeForm = false;
     });
+  }
+
+  displayExecForm() {
+    this.forceDisplayExecForm = true;
+  }
+
+  displayApplyForm() {
+    this.forceDisplayApplyForm = true;
+  }
+
+  displayCompositeForm() {
+    this.forceDisplayCompositeForm = true;
   }
 
 }

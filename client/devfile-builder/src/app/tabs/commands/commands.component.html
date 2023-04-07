@@ -10,6 +10,8 @@
         <mat-card-content *ngIf="command.type == 'exec'">
             <div>Container: {{command.exec?.component}}</div>
             <div>Command Line: {{command.exec?.commandLine}}</div>
+            <div>Working Directory: {{command.exec?.workingDir}}</div>
+            <div *ngIf="command.exec?.hotReloadCapable">Is Hot Reload Capable</div>
         </mat-card-content>
 
         <mat-card-content *ngIf="command.type == 'apply'">
@@ -32,4 +34,13 @@
         </mat-card-content>
     </mat-card>
 
+    <app-command-exec *ngIf="forceDisplayExecForm"></app-command-exec>
+    <app-command-apply *ngIf="forceDisplayApplyForm"></app-command-apply>
+    <app-command-composite *ngIf="forceDisplayCompositeForm"></app-command-composite>
+
+    <ng-container *ngIf="!forceDisplayExecForm && !forceDisplayApplyForm && !forceDisplayCompositeForm">
+        <button mat-flat-button (click)="displayExecForm()">Add an Exec Command</button>
+        <button mat-flat-button (click)="displayApplyForm()">Add an Apply Command</button>
+        <button mat-flat-button (click)="displayCompositeForm()">Add a Composite Command</button>
+    </ng-container>
 </div>

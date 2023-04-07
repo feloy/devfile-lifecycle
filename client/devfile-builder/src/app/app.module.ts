@@ -23,6 +23,10 @@ import { NewUserCommandComponent } from './forms/new-user-command/new-user-comma
 import { ContainersComponent } from './tabs/containers/containers.component';
 import { ContainerComponent } from './forms/container/container.component';
 import { CommandsComponent } from './tabs/commands/commands.component';
+import { CommandExecComponent } from './forms/command-exec/command-exec.component';
+import { CommandApplyComponent } from './forms/command-apply/command-apply.component';
+import { CommandCompositeComponent } from './forms/command-composite/command-composite.component';
+import { SelectContainerComponent } from './controls/select-container/select-container.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +39,10 @@ import { CommandsComponent } from './tabs/commands/commands.component';
     ContainersComponent,
     ContainerComponent,
     CommandsComponent,
+    CommandExecComponent,
+    CommandApplyComponent,
+    CommandCompositeComponent,
+    SelectContainerComponent,
   ],
   imports: [
     BrowserModule,
