@@ -1,3 +1,12 @@
 <div class="main">
     <h2>Add an Apply Command</h2>
+    <form [formGroup]="form">
+        <mat-form-field appearance="outline" class="mid-width">
+            <mat-label><span>Name</span></mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+        <app-select-container formControlName="component" [containers]="resourceList"></app-select-container>
+    </form>
+
+    <button mat-flat-button color="primary" matTooltip="create new Apply Command" (click)="create()">Create</button>
 </div>

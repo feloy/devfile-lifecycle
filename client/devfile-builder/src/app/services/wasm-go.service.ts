@@ -17,6 +17,7 @@ export type ResultValue = {
   metadata: Metadata;
   commands: Command[];
   containers: Container[];
+  resources: ClusterResource[];
   devEnvs: DevEnv[];
 };
 
@@ -67,6 +68,12 @@ export type Container = {
   args: string[];
 };
 
+export type ClusterResource = {
+  name: string;
+  inlined: string;
+  uri: string;
+};
+
 export type DevEnv = {
   name: string;
   image: string;
@@ -89,6 +96,7 @@ export type UserCommand = {
 
 declare const addContainer: (name: string, image: string, command: string[], args: string[]) => Result;
 declare const addExecCommand: (name: string, component: string, commmandLine: string, workingDir: string, hotReloadCapable: boolean) => Result;
+declare const addApplyCommand: (name: string, component: string) => Result;
 declare const addUserCommand: (component: string, name: string, commandLine: string) => Result;
 declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;
@@ -127,6 +135,14 @@ export class WasmGoService {
       cmd.commandLine,
       cmd.workingDir,
       cmd.hotReloadCapable,
+    );
+    return result.value;
+  }
+
+  addApplyCommand(name: string, cmd: ApplyCommand): ResultValue {
+    const result = addApplyCommand(
+      name,
+      cmd.component,      
     );
     return result.value;
   }

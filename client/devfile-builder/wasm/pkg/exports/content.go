@@ -37,6 +37,11 @@ func getContent() (map[string]interface{}, error) {
 		return nil, errors.New("error getting containers")
 	}
 
+	resources, err := getResources()
+	if err != nil {
+		return nil, errors.New("error getting Kubernetes resources")
+	}
+
 	devEnvs, err := getDevEnvs()
 	if err != nil {
 		return nil, errors.New("error getting development environments")
@@ -47,6 +52,7 @@ func getContent() (map[string]interface{}, error) {
 		"metadata":   getMetadata(),
 		"commands":   commands,
 		"containers": containers,
+		"resources":  resources,
 		"devEnvs":    devEnvs,
 	}, nil
 }
@@ -136,6 +142,26 @@ func getContainers() ([]interface{}, error) {
 			"image":   container.ComponentUnion.Container.Image,
 			"command": commands,
 			"args":    args,
+		})
+	}
+	return result, nil
+}
+
+func getResources() ([]interface{}, error) {
+	resources, err := global.Devfile.Data.GetComponents(common.DevfileOptions{
+		ComponentOptions: common.ComponentOptions{
+			ComponentType: v1alpha2.KubernetesComponentType,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	result := make([]interface{}, 0, len(resources))
+	for _, resource := range resources {
+		result = append(result, map[string]interface{}{
+			"name":    resource.Name,
+			"inlined": resource.ComponentUnion.Kubernetes.Inlined,
+			"uri":     resource.ComponentUnion.Kubernetes.Uri,
 		})
 	}
 	return result, nil

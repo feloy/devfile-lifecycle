@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { StateService } from 'src/app/services/state.service';
+import { WasmGoService } from 'src/app/services/wasm-go.service';
 
 @Component({
   selector: 'app-command-apply',
@@ -6,5 +9,30 @@ import { Component } from '@angular/core';
   styleUrls: ['./command-apply.component.css']
 })
 export class CommandApplyComponent {
+  form: FormGroup;
+  resourceList: string[] = [];
 
+  constructor(
+    private wasm: WasmGoService,
+    private state: StateService,
+  ) {
+    this.form = new FormGroup({
+      name: new FormControl(),
+      component: new FormControl(),
+    });
+
+    this.state.state.subscribe(async newContent => {
+      const resources = newContent?.resources;
+      if (resources == null) {
+        return
+      }
+      this.resourceList = resources.map(resource => resource.name);
+    });
+  }
+
+  create() {
+   console.log(this.form.value);
+    const newDevfile = this.wasm.addApplyCommand(this.form.value["name"], this.form.value);
+    this.state.changeDevfileYaml(newDevfile);
+  }
 }
