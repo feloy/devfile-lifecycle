@@ -27,15 +27,21 @@ func getContent() (map[string]interface{}, error) {
 		return nil, errors.New("error reading file")
 	}
 
+	containers, err := getContainers()
+	if err != nil {
+		return nil, errors.New("error getting containers")
+	}
+
 	devEnvs, err := getDevEnvs()
 	if err != nil {
 		return nil, errors.New("error getting development environments")
 	}
 
 	return map[string]interface{}{
-		"content":  string(result),
-		"metadata": getMetadata(),
-		"devEnvs":  devEnvs,
+		"content":    string(result),
+		"metadata":   getMetadata(),
+		"containers": containers,
+		"devEnvs":    devEnvs,
 	}, nil
 }
 
@@ -56,6 +62,37 @@ func getMetadata() map[string]interface{} {
 		"provider":          metadata.Provider,
 		"supportUrl":        metadata.SupportUrl,
 	}
+}
+
+func getContainers() ([]interface{}, error) {
+	containers, err := global.Devfile.Data.GetComponents(common.DevfileOptions{
+		ComponentOptions: common.ComponentOptions{
+			ComponentType: v1alpha2.ContainerComponentType,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	result := make([]interface{}, 0, len(containers))
+	for _, container := range containers {
+		commands := make([]interface{}, len(container.ComponentUnion.Container.Command))
+		for i, command := range container.ComponentUnion.Container.Command {
+			commands[i] = command
+		}
+
+		args := make([]interface{}, len(container.ComponentUnion.Container.Args))
+		for i, arg := range container.ComponentUnion.Container.Args {
+			args[i] = arg
+		}
+
+		result = append(result, map[string]interface{}{
+			"name":    container.Name,
+			"image":   container.ComponentUnion.Container.Image,
+			"command": commands,
+			"args":    args,
+		})
+	}
+	return result, nil
 }
 
 func getDevEnvs() ([]interface{}, error) {

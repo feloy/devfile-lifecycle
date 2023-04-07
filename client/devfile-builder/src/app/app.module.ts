@@ -20,6 +20,7 @@ import { DevEnvComponent } from './forms/dev-env/dev-env.component';
 import { NewDevEnvComponent } from './forms/new-dev-env/new-dev-env.component';
 import { MultiTextComponent } from './controls/multi-text/multi-text.component';
 import { NewUserCommandComponent } from './forms/new-user-command/new-user-command.component';
+import { ContainersComponent } from './tabs/containers/containers.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { NewUserCommandComponent } from './forms/new-user-command/new-user-comma
     NewDevEnvComponent,
     MultiTextComponent,
     NewUserCommandComponent,
+    ContainersComponent,
   ],
   imports: [
     BrowserModule,

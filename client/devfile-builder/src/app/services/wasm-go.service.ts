@@ -15,6 +15,7 @@ type Result = {
 export type ResultValue = {
   content: string;
   metadata: Metadata;
+  containers: Container[];
   devEnvs: DevEnv[];
 };
 
@@ -32,6 +33,13 @@ export type Metadata = {
   website: string | null;
   provider: string | null;
   supportUrl: string | null;
+};
+
+export type Container = {
+  name: string;
+  image: string;
+  command: string[];
+  args: string[];
 };
 
 export type DevEnv = {
