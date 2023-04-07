@@ -8,6 +8,7 @@ import (
 	"github.com/devfile/library/v2/pkg/devfile/parser"
 	context "github.com/devfile/library/v2/pkg/devfile/parser/context"
 	"github.com/devfile/library/v2/pkg/testingutil/filesystem"
+	"k8s.io/utils/pointer"
 
 	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/global"
 )
@@ -22,7 +23,8 @@ func SetDevfileContentWrapper(this js.Value, args []js.Value) interface{} {
 
 func SetDevfileContent(content string) (map[string]interface{}, error) {
 	parserArgs := parser.ParserArgs{
-		Data: []byte(content),
+		Data:                          []byte(content),
+		ConvertKubernetesContentInUri: pointer.Bool(false),
 	}
 	var err error
 	global.Devfile, _, err = devfile.ParseDevfileAndValidate(parserArgs)
