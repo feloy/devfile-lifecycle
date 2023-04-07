@@ -40,9 +40,10 @@ export type Metadata = {
 
 export type Command = {
   name: string;
-  type: "exec" | "apply" | "composite";
+  type: "exec" | "apply" | "image" | "composite";
   exec: ExecCommand | undefined;
   apply: ApplyCommand | undefined;
+  image: ImageCommand | undefined;
   composite: CompositeCommand | undefined;
 };
 
@@ -54,6 +55,10 @@ export type ExecCommand = {
 };
 
 export type ApplyCommand = {
+  component: string;
+};
+
+export type ImageCommand = {
   component: string;
 };
 

@@ -1,0 +1,12 @@
+<div class="main">
+    <h2>Add an Image Command</h2>
+    <form [formGroup]="form">
+        <mat-form-field appearance="outline" class="mid-width">
+            <mat-label><span>Name</span></mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+        <app-select-container formControlName="component" label="Image" [containers]="imageList"></app-select-container>
+    </form>
+
+    <button mat-flat-button color="primary" matTooltip="create new Image Command" (click)="create()">Create</button>
+</div>

@@ -31,6 +31,7 @@ import { ResourcesComponent } from './tabs/resources/resources.component';
 import { ResourceComponent } from './forms/resource/resource.component';
 import { ImagesComponent } from './tabs/images/images.component';
 import { ImageComponent } from './forms/image/image.component';
+import { CommandImageComponent } from './forms/command-image/command-image.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ImageComponent } from './forms/image/image.component';
     ResourceComponent,
     ImagesComponent,
     ImageComponent,
+    CommandImageComponent,
   ],
   imports: [
     BrowserModule,

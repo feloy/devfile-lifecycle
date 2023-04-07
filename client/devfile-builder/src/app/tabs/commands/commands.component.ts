@@ -11,6 +11,7 @@ export class CommandsComponent {
 
   forceDisplayExecForm: boolean = false;
   forceDisplayApplyForm: boolean = false;
+  forceDisplayImageForm: boolean = false;
   forceDisplayCompositeForm: boolean = false;
 
   commands: Command[] | undefined = [];
@@ -38,6 +39,10 @@ export class CommandsComponent {
 
   displayApplyForm() {
     this.forceDisplayApplyForm = true;
+  }
+
+  displayImageForm() {
+    this.forceDisplayImageForm = true;
   }
 
   displayCompositeForm() {

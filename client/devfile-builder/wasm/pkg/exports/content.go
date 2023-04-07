@@ -2,6 +2,7 @@ package exports
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/devfile/api/v2/pkg/apis/workspaces/v1alpha2"
@@ -104,10 +105,29 @@ func getCommands() ([]interface{}, error) {
 		}
 
 		if command.Apply != nil {
-			newCommand["type"] = "apply"
-			newCommand["apply"] = map[string]interface{}{
-				"component": command.Apply.Component,
+			components, err := global.Devfile.Data.GetComponents(common.DevfileOptions{
+				FilterByName: command.Apply.Component,
+			})
+			if err != nil {
+				return nil, err
 			}
+			if len(components) == 0 {
+				return nil, fmt.Errorf("component %q not found", command.Apply.Component)
+			}
+			component := components[0]
+			if component.Kubernetes != nil || component.Openshift != nil {
+				newCommand["type"] = "apply"
+				newCommand["apply"] = map[string]interface{}{
+					"component": command.Apply.Component,
+				}
+			}
+			if component.Image != nil {
+				newCommand["type"] = "image"
+				newCommand["image"] = map[string]interface{}{
+					"component": command.Apply.Component,
+				}
+			}
+
 		}
 
 		if command.Composite != nil {
