@@ -21,6 +21,7 @@ import { NewDevEnvComponent } from './forms/new-dev-env/new-dev-env.component';
 import { MultiTextComponent } from './controls/multi-text/multi-text.component';
 import { NewUserCommandComponent } from './forms/new-user-command/new-user-command.component';
 import { ContainersComponent } from './tabs/containers/containers.component';
+import { ContainerComponent } from './forms/container/container.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { ContainersComponent } from './tabs/containers/containers.component';
     MultiTextComponent,
     NewUserCommandComponent,
     ContainersComponent,
+    ContainerComponent,
   ],
   imports: [
     BrowserModule,

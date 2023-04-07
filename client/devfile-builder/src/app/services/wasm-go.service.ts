@@ -62,7 +62,7 @@ export type UserCommand = {
   workingDir: string;
 };
 
-declare const addContainer: (name: string, image: string) => Result;
+declare const addContainer: (name: string, image: string, command: string[], args: string[]) => Result;
 declare const addUserCommand: (component: string, name: string, commandLine: string) => Result;
 declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;
@@ -84,8 +84,14 @@ export class WasmGoService {
     });
   }
 
-  addContainer(name: string, image: string): ResultValue {
-    const result = addContainer(name, image);
+  addContainer(container: Container): ResultValue {
+    console.log("container", container);
+    const result = addContainer(
+      container.name,
+      container.image,
+      container.command,
+      container.args,
+    );
     return result.value;
   }
 

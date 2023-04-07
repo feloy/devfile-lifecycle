@@ -9,6 +9,7 @@ import { Container } from 'src/app/services/wasm-go.service';
 })
 export class ContainersComponent implements OnInit {
   
+  forceDisplayAdd: boolean = false;
   containers: Container[] | undefined = [];
 
   constructor(
@@ -22,8 +23,11 @@ export class ContainersComponent implements OnInit {
       if (this.containers == null) {
         return
       }
-      console.log(that.containers);
+      that.forceDisplayAdd = false;
     });
   }
 
+  displayAddForm() {
+    this.forceDisplayAdd = true;
+  }
 }

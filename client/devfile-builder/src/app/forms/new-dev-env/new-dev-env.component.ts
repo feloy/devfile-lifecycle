@@ -25,7 +25,12 @@ export class NewDevEnvComponent {
       // TODO should not happen with form validation
       return;
     }
-    const newDevfile = this.wasm.addContainer(this.newName.value, this.newImage.value);
+    const newDevfile = this.wasm.addContainer({
+      name: this.newName.value,
+      image: this.newImage.value,
+      command: [],
+      args:[],
+    });
     this.state.changeDevfileYaml(newDevfile);
     
     this.resetNew();

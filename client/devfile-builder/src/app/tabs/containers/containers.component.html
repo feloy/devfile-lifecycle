@@ -11,4 +11,8 @@
         </mat-card-content>
 
     </mat-card>
+
+    <app-container *ngIf="forceDisplayAdd || containers == undefined || containers.length == 0"></app-container>
+    <button mat-flat-button (click)="displayAddForm()">Add a new container</button>
+
 </div>
