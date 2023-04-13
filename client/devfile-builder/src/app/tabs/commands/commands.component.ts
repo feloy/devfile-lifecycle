@@ -1,6 +1,7 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { StateService } from 'src/app/services/state.service';
-import { Command } from 'src/app/services/wasm-go.service';
+import { Command, WasmGoService } from 'src/app/services/wasm-go.service';
 
 @Component({
   selector: 'app-commands',
@@ -18,6 +19,7 @@ export class CommandsComponent {
 
   constructor(
     private state: StateService,
+    private wasm: WasmGoService,
   ) {}
 
   ngOnInit() {
@@ -49,4 +51,19 @@ export class CommandsComponent {
     this.forceDisplayCompositeForm = true;
   }
 
+  drop(event: CdkDragDrop<string>) {
+    console.log(event);
+    this.moveCommand(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex,
+    );
+  }
+
+  moveCommand(previousKind: string, newKind: string, previousIndex: number, newIndex: number) {
+    console.log("move from kind '"+previousKind+"' index " + previousIndex + " to '"+newKind+"' index "+newIndex);
+    const newDevfile = this.wasm.moveCommand(previousKind, newKind, previousIndex, newIndex);
+    this.state.changeDevfileYaml(newDevfile);
+  }
 }

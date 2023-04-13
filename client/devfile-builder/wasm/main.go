@@ -24,6 +24,7 @@ func main() {
 	js.Global().Set("setDevfileContent", js.FuncOf(exports.SetDevfileContentWrapper))
 	js.Global().Set("setMetadata", js.FuncOf(exports.SetMetadataWrapper))
 	js.Global().Set("updateContainer", js.FuncOf(exports.UpdateContainerWrapper))
+	js.Global().Set("moveCommand", js.FuncOf(exports.MoveCommandWrapper))
 
 	<-make(chan bool)
 }

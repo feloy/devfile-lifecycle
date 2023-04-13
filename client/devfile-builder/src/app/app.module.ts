@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -32,6 +34,7 @@ import { ResourceComponent } from './forms/resource/resource.component';
 import { ImagesComponent } from './tabs/images/images.component';
 import { ImageComponent } from './forms/image/image.component';
 import { CommandImageComponent } from './forms/command-image/command-image.component';
+import { CommandsListComponent } from './lists/commands-list/commands-list.component';
 
 @NgModule({
   declarations: [
@@ -53,12 +56,15 @@ import { CommandImageComponent } from './forms/command-image/command-image.compo
     ImagesComponent,
     ImageComponent,
     CommandImageComponent,
+    CommandsListComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
 
+    DragDropModule,
+    
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,

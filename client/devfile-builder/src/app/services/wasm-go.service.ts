@@ -40,6 +40,8 @@ export type Metadata = {
 
 export type Command = {
   name: string;
+  group: string;
+  default: boolean;
   type: "exec" | "apply" | "image" | "composite";
   exec: ExecCommand | undefined;
   apply: ApplyCommand | undefined;
@@ -119,6 +121,7 @@ declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;
 declare const setMetadata: (metadata: Metadata) => Result;
 declare const updateContainer: (name: string, image: string, command: string[], args: string[], userCommands: UserCommand[]) => Result;
+declare const moveCommand: (previousKind: string, newKind: string, previousIndex: number, newIndex: number) => Result;
 
 @Injectable({
   providedIn: 'root'
@@ -217,6 +220,11 @@ export class WasmGoService {
 
   setMetadata(metadata: Metadata): ResultValue {
     const result = setMetadata(metadata);
+    return result.value;
+  }
+
+  moveCommand(previousKind: string, newKind: string, previousIndex: number, newIndex: number) {
+    const result = moveCommand(previousKind, newKind, previousIndex, newIndex);
     return result.value;
   }
 

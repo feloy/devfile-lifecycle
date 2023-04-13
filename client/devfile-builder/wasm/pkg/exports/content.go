@@ -91,7 +91,9 @@ func getCommands() ([]interface{}, error) {
 	result := make([]interface{}, 0, len(commands))
 	for _, command := range commands {
 		newCommand := map[string]interface{}{
-			"name": command.Id,
+			"name":    command.Id,
+			"group":   getGroup(command),
+			"default": getDefault(command),
 		}
 
 		if command.Exec != nil {
@@ -292,24 +294,4 @@ func joinArchitectures(architectures []apidevfile.Architecture) string {
 		strArchs[i] = string(arch)
 	}
 	return strings.Join(strArchs, SEPARATOR)
-}
-
-func getGroup(command v1alpha2.Command) string {
-	if command.Exec == nil {
-		return ""
-	}
-	if command.Exec.Group == nil {
-		return ""
-	}
-	return string(command.Exec.Group.Kind)
-}
-
-func getDefault(command v1alpha2.Command) bool {
-	if command.Exec == nil {
-		return false
-	}
-	if command.Exec.Group == nil {
-		return false
-	}
-	return pointer.BoolDeref(command.Exec.Group.IsDefault, false)
 }
