@@ -1,8 +1,6 @@
 package exports
 
 import (
-	"fmt"
-
 	"github.com/devfile/api/v2/pkg/apis/workspaces/v1alpha2"
 	"k8s.io/utils/pointer"
 )
@@ -31,7 +29,6 @@ func getDefault(command v1alpha2.Command) bool {
 }
 
 func setGroup(command *v1alpha2.Command, group string) {
-	fmt.Printf("setting group %s to command %s\n", group, command.Id)
 	if command.Exec != nil {
 		if group == "" {
 			command.Exec.Group = nil
@@ -41,7 +38,6 @@ func setGroup(command *v1alpha2.Command, group string) {
 			command.Exec.Group = &v1alpha2.CommandGroup{}
 		}
 		command.Exec.Group.Kind = v1alpha2.CommandGroupKind(group)
-		fmt.Printf("set kind %s\n", group)
 		return
 	}
 	if command.Apply != nil {
@@ -53,7 +49,6 @@ func setGroup(command *v1alpha2.Command, group string) {
 			command.Apply.Group = &v1alpha2.CommandGroup{}
 		}
 		command.Apply.Group.Kind = v1alpha2.CommandGroupKind(group)
-		fmt.Printf("set kind %s\n", group)
 		return
 	}
 	if command.Composite != nil {
@@ -65,7 +60,6 @@ func setGroup(command *v1alpha2.Command, group string) {
 			command.Composite.Group = &v1alpha2.CommandGroup{}
 		}
 		command.Composite.Group.Kind = v1alpha2.CommandGroupKind(group)
-		fmt.Printf("set kind %s\n", group)
 		return
 	}
 }

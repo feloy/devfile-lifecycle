@@ -52,7 +52,6 @@ export class CommandsComponent {
   }
 
   drop(event: CdkDragDrop<string>) {
-    console.log(event);
     this.moveCommand(
       event.previousContainer.data,
       event.container.data,
@@ -62,7 +61,6 @@ export class CommandsComponent {
   }
 
   moveCommand(previousKind: string, newKind: string, previousIndex: number, newIndex: number) {
-    console.log("move from kind '"+previousKind+"' index " + previousIndex + " to '"+newKind+"' index "+newIndex);
     const newDevfile = this.wasm.moveCommand(previousKind, newKind, previousIndex, newIndex);
     this.state.changeDevfileYaml(newDevfile);
   }
