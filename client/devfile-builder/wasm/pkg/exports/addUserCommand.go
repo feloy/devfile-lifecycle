@@ -5,6 +5,7 @@ import (
 
 	"github.com/devfile/api/v2/pkg/apis/workspaces/v1alpha2"
 	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/global"
+	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/utils"
 )
 
 func AddUserCommandWrapper(this js.Value, args []js.Value) interface{} {
@@ -27,5 +28,5 @@ func addUserCommand(component string, name string, commandLine string) (map[stri
 	if err != nil {
 		return nil, err
 	}
-	return getContent()
+	return utils.GetContent()
 }

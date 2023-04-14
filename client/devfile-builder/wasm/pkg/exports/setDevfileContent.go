@@ -11,6 +11,7 @@ import (
 	"k8s.io/utils/pointer"
 
 	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/global"
+	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/utils"
 )
 
 // setDevfileContent
@@ -34,5 +35,5 @@ func SetDevfileContent(content string) (map[string]interface{}, error) {
 	global.FS = filesystem.NewFakeFs()
 	global.Devfile.Ctx = context.FakeContext(global.FS, "/devfile.yaml")
 
-	return getContent()
+	return utils.GetContent()
 }

@@ -7,6 +7,7 @@ import (
 	apidevfile "github.com/devfile/api/v2/pkg/devfile"
 
 	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/global"
+	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/utils"
 )
 
 // setMetadata
@@ -33,14 +34,14 @@ func setMetadata(metadata js.Value) (map[string]interface{}, error) {
 		Provider:          metadata.Get("provider").String(),
 		SupportUrl:        metadata.Get("supportUrl").String(),
 	})
-	return getContent()
+	return utils.GetContent()
 }
 
 func splitArchitectures(architectures string) []apidevfile.Architecture {
 	if architectures == "" {
 		return nil
 	}
-	parts := strings.Split(architectures, SEPARATOR)
+	parts := strings.Split(architectures, utils.SEPARATOR)
 	result := make([]apidevfile.Architecture, len(parts))
 	for i, arch := range parts {
 		result[i] = apidevfile.Architecture(strings.Trim(arch, " "))
@@ -52,7 +53,7 @@ func splitTags(tags string) []string {
 	if tags == "" {
 		return nil
 	}
-	parts := strings.Split(tags, SEPARATOR)
+	parts := strings.Split(tags, utils.SEPARATOR)
 	result := make([]string, len(parts))
 	for i, tag := range parts {
 		result[i] = strings.Trim(tag, " ")

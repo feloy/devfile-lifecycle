@@ -6,6 +6,7 @@ import (
 	"github.com/devfile/api/v2/pkg/apis/workspaces/v1alpha2"
 	"github.com/devfile/library/v2/pkg/devfile/parser/data/v2/common"
 	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/global"
+	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/utils"
 )
 
 func UpdateContainerWrapper(this js.Value, args []js.Value) interface{} {
@@ -76,5 +77,5 @@ func updateContainer(name string, image string, command []string, args []string,
 	if err != nil {
 		return nil, err
 	}
-	return getContent()
+	return utils.GetContent()
 }

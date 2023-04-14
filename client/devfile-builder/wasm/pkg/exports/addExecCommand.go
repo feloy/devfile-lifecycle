@@ -5,6 +5,7 @@ import (
 
 	"github.com/devfile/api/v2/pkg/apis/workspaces/v1alpha2"
 	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/global"
+	"github.com/feloy/devfile-lifecycle/client/devfile-builder/wasm/pkg/utils"
 )
 
 func AddExecCommandWrapper(this js.Value, args []js.Value) interface{} {
@@ -29,5 +30,5 @@ func addExecCommand(name string, component string, commandLine string, workingDi
 	if err != nil {
 		return nil, err
 	}
-	return getContent()
+	return utils.GetContent()
 }
