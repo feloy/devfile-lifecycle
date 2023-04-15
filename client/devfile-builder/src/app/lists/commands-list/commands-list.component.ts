@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { StateService } from 'src/app/services/state.service';
 import { Command, WasmGoService } from 'src/app/services/wasm-go.service';
 
@@ -16,8 +17,21 @@ export class CommandsListComponent {
     private state: StateService,
   ) {}
 
+  toggleDefault(event: MatCheckboxChange, command: string, group: string) {
+    if (event.checked) {
+      this.setDefault(command, group);
+    } else {
+      this.unsetDefault(command);
+    }
+  }
+
   setDefault(command: string, group: string) {
     const newDevfile = this.wasm.setDefaultCommand(command, group);
+    this.state.changeDevfileYaml(newDevfile);
+  }
+
+  unsetDefault(command: string) {
+    const newDevfile = this.wasm.unsetDefaultCommand(command);
     this.state.changeDevfileYaml(newDevfile);
   }
 }

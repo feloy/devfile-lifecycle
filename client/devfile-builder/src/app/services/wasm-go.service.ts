@@ -123,6 +123,7 @@ declare const setMetadata: (metadata: Metadata) => Result;
 declare const updateContainer: (name: string, image: string, command: string[], args: string[], userCommands: UserCommand[]) => Result;
 declare const moveCommand: (previousKind: string, newKind: string, previousIndex: number, newIndex: number) => Result;
 declare const setDefaultCommand: (command: string, group: string) => Result;
+declare const unsetDefaultCommand: (command: string) => Result;
 
 @Injectable({
   providedIn: 'root'
@@ -231,6 +232,11 @@ export class WasmGoService {
 
   setDefaultCommand(command: string, group: string) {
     const result = setDefaultCommand(command, group);
+    return result.value;
+  }
+
+  unsetDefaultCommand(command: string) {
+    const result = unsetDefaultCommand(command);
     return result.value;
   }
 }

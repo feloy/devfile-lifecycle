@@ -9,7 +9,7 @@
         </mat-card-header>
 
         <mat-card-content *ngIf="command.type == 'exec'">
-            <mat-checkbox *ngIf="command.group != ''" [checked]="command.default" (click)="setDefault(command.name, command.group)">Default {{kind}} command</mat-checkbox>
+            <mat-checkbox *ngIf="command.group != ''" [checked]="command.default" (change)="toggleDefault($event, command.name, command.group)">Default {{kind}} command</mat-checkbox>
             <div>Container: {{command.exec?.component}}</div>
             <div>Command Line: {{command.exec?.commandLine}}</div>
             <div>Working Directory: {{command.exec?.workingDir}}</div>

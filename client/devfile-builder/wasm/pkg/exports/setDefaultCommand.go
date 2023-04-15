@@ -22,12 +22,12 @@ func setDefaultCommand(commandName string, group string) (map[string]interface{}
 		return nil, err
 	}
 
-	for i, command := range commands {
+	for _, command := range commands {
 		if utils.GetGroup(command) == group {
 			isDefault := command.Id == commandName
 			fmt.Printf("setting default = %v for command %q\n", isDefault, command.Id)
-			utils.SetDefault(&commands[i], isDefault)
-			err = global.Devfile.Data.UpdateCommand(commands[i])
+			utils.SetDefault(&command, isDefault)
+			err = global.Devfile.Data.UpdateCommand(command)
 			if err != nil {
 				fmt.Printf("%s\n", err)
 				return nil, err

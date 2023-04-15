@@ -26,6 +26,7 @@ func main() {
 	js.Global().Set("updateContainer", js.FuncOf(exports.UpdateContainerWrapper))
 	js.Global().Set("moveCommand", js.FuncOf(exports.MoveCommandWrapper))
 	js.Global().Set("setDefaultCommand", js.FuncOf(exports.SetDefaultCommandWrapper))
+	js.Global().Set("unsetDefaultCommand", js.FuncOf(exports.UnsetDefaultCommandWrapper))
 
 	<-make(chan bool)
 }
