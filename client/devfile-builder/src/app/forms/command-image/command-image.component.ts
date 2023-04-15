@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
+import { PATTERN_COMMAND_ID } from '../patterns';
 
 @Component({
   selector: 'app-command-image',
@@ -17,8 +18,8 @@ export class CommandImageComponent {
     private state: StateService,
   ) {
     this.form = new FormGroup({
-      name: new FormControl(),
-      component: new FormControl(),
+      name: new FormControl("", [Validators.required, Validators.pattern(PATTERN_COMMAND_ID)]),
+      component: new FormControl("", [Validators.required]),
     });
 
     this.state.state.subscribe(async newContent => {

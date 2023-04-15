@@ -17,5 +17,5 @@
         <app-select-container formControlName="component" label="Container" [containers]="containerList"></app-select-container>
     </form>
 
-    <button mat-flat-button color="primary" matTooltip="create new Exec Command" (click)="create()">Create</button>
+    <button [disabled]="form.invalid" mat-flat-button color="primary" matTooltip="create new Exec Command" (click)="create()">Create</button>
 </div>

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
+import { PATTERN_COMMAND_ID } from '../patterns';
 
 @Component({
   selector: 'app-command-exec',
@@ -17,10 +18,10 @@ export class CommandExecComponent {
     private state: StateService,
   ) {
     this.form = new FormGroup({
-      name: new FormControl(""),
-      component: new FormControl(),
-      commandLine: new FormControl(""),
-      workingDir: new FormControl(""),
+      name: new FormControl("", [Validators.required, Validators.pattern(PATTERN_COMMAND_ID)]),
+      component: new FormControl("", [Validators.required]),
+      commandLine: new FormControl("", [Validators.required]),
+      workingDir: new FormControl("", [Validators.required]),
       hotReloadCapable: new FormControl(false),
     });
 

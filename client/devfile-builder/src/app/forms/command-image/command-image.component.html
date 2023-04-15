@@ -8,5 +8,5 @@
         <app-select-container formControlName="component" label="Image" [containers]="imageList"></app-select-container>
     </form>
 
-    <button mat-flat-button color="primary" matTooltip="create new Image Command" (click)="create()">Create</button>
+    <button [disabled]="form.invalid" mat-flat-button color="primary" matTooltip="create new Image Command" (click)="create()">Create</button>
 </div>
