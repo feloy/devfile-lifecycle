@@ -7,11 +7,11 @@
         </mat-form-field>
     
         <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Description</mat-label>
+            <mat-label>YAML Manifest</mat-label>
             <textarea matInput formControlName="inlined" rows="8"></textarea>
         </mat-form-field>
     
     </form>
 
-    <button mat-flat-button color="primary" matTooltip="create new resource" (click)="create()">Create</button>
+    <button [disabled]="form.invalid" mat-flat-button color="primary" matTooltip="create new resource" (click)="create()">Create</button>
 </div>

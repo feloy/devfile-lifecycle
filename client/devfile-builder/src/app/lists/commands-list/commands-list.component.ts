@@ -34,4 +34,8 @@ export class CommandsListComponent {
     const newDevfile = this.wasm.unsetDefaultCommand(command);
     this.state.changeDevfileYaml(newDevfile);
   }
+
+  getCommandsByKind(commands: Command[] | undefined, kind: string ): Command[] | undefined {
+    return commands?.filter((c: Command) => c.group == kind);
+  }
 }

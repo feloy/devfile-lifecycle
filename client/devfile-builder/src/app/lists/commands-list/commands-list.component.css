@@ -13,3 +13,6 @@ mat-card-content { padding: 16px; }
 .serial-commands {
     margin: 4px;
 }
+div.nothing-here {
+    margin: 0 4px 16px 4px;
+}

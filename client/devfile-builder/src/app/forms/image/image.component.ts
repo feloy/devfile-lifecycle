@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
 
@@ -16,12 +16,12 @@ export class ImageComponent {
     private state: StateService,
   ) {
     this.form = new FormGroup({
-      name: new FormControl(""),
-      imageName: new FormControl(""),
+      name: new FormControl("", [Validators.required]),
+      imageName: new FormControl("", [Validators.required]),
       args: new FormControl([]),
       buildContext: new FormControl(""),
       rootRequired: new FormControl(false),
-      uri: new FormControl(""),
+      uri: new FormControl("", [Validators.required]),
     })
   }
 

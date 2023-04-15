@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
 
@@ -16,8 +16,8 @@ export class ResourceComponent {
     private state: StateService,
   ) {
     this.form = new FormGroup({
-      name: new FormControl(""),
-      inlined: new FormControl(""),
+      name: new FormControl("", [Validators.required]),
+      inlined: new FormControl("", [Validators.required]),
     })
   }
 

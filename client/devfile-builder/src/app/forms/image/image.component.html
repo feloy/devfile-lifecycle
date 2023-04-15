@@ -15,12 +15,12 @@
             <input matInput formControlName="buildContext">
         </mat-form-field>
         <mat-form-field appearance="outline" class="mid-width">
-            <mat-label><span>URI</span></mat-label>
+            <mat-label><span>Dockerfile URI</span></mat-label>
             <input matInput formControlName="uri">
         </mat-form-field>
         <mat-checkbox formControlName="rootRequired">Root Required</mat-checkbox>    
 
     </form>
 
-    <button mat-flat-button color="primary" matTooltip="create new image" (click)="create()">Create</button>
+    <button [disabled]="form.invalid" mat-flat-button color="primary" matTooltip="create new image" (click)="create()">Create</button>
 </div>
