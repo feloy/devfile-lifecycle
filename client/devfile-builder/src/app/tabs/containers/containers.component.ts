@@ -30,4 +30,8 @@ export class ContainersComponent implements OnInit {
   displayAddForm() {
     this.forceDisplayAdd = true;
   }
+
+  undisplayAddForm() {
+    this.forceDisplayAdd = false;
+  }
 }

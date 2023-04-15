@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
@@ -10,6 +10,8 @@ import { PATTERN_COMMAND_ID } from '../patterns';
   styleUrls: ['./command-image.component.css']
 })
 export class CommandImageComponent {
+  @Output() canceled = new EventEmitter<void>();
+
   form: FormGroup;
   imageList: string[] = [];
 
@@ -35,5 +37,9 @@ export class CommandImageComponent {
     console.log(this.form.value);
     const newDevfile = this.wasm.addApplyCommand(this.form.value["name"], this.form.value);
     this.state.changeDevfileYaml(newDevfile);
+  }
+
+  cancel() {
+    this.canceled.emit();
   }
 }

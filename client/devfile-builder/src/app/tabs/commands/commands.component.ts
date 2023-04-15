@@ -51,6 +51,22 @@ export class CommandsComponent {
     this.forceDisplayCompositeForm = true;
   }
 
+  undisplayExecForm() {
+    this.forceDisplayExecForm = false;
+  }
+
+  undisplayApplyForm() {
+    this.forceDisplayApplyForm = false;
+  }
+
+  undisplayImageForm() {
+    this.forceDisplayImageForm = false;
+  }
+
+  undisplayCompositeForm() {
+    this.forceDisplayCompositeForm = false;
+  }
+
   drop(event: CdkDragDrop<string>) {
     this.moveCommand(
       event.previousContainer.data,

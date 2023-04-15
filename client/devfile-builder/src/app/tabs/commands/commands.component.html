@@ -43,10 +43,10 @@
             <app-commands-list kind="" [commands]="commands"></app-commands-list>
         </div>
     </div>
-    <app-command-exec *ngIf="forceDisplayExecForm"></app-command-exec>
-    <app-command-apply *ngIf="forceDisplayApplyForm"></app-command-apply>
-    <app-command-image *ngIf="forceDisplayImageForm"></app-command-image>
-    <app-command-composite *ngIf="forceDisplayCompositeForm"></app-command-composite>
+    <app-command-exec (canceled)="undisplayExecForm()" *ngIf="forceDisplayExecForm"></app-command-exec>
+    <app-command-apply (canceled)="undisplayApplyForm()" *ngIf="forceDisplayApplyForm"></app-command-apply>
+    <app-command-image (canceled)="undisplayImageForm()" *ngIf="forceDisplayImageForm"></app-command-image>
+    <app-command-composite (canceled)="undisplayCompositeForm()" *ngIf="forceDisplayCompositeForm"></app-command-composite>
 
     <ng-container *ngIf="!forceDisplayExecForm && !forceDisplayApplyForm && !forceDisplayImageForm && !forceDisplayCompositeForm">
         <button mat-flat-button (click)="displayExecForm()">Add an Exec Command</button>

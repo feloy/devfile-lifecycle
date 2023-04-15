@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
@@ -9,6 +9,9 @@ import { WasmGoService } from 'src/app/services/wasm-go.service';
   styleUrls: ['./image.component.css']
 })
 export class ImageComponent {
+  @Input() cancelable: boolean = false;
+  @Output() canceled = new EventEmitter<void>();
+
   form: FormGroup;
 
   constructor(
@@ -30,4 +33,7 @@ export class ImageComponent {
     this.state.changeDevfileYaml(newDevfile);
   }
 
+  cancel() {
+    this.canceled.emit();
+  }
 }

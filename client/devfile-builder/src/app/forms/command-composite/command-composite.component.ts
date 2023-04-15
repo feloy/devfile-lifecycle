@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-command-composite',
@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./command-composite.component.css']
 })
 export class CommandCompositeComponent {
+  @Output() canceled = new EventEmitter<void>();
 
+  cancel() {
+    this.canceled.emit();
+  }
 }

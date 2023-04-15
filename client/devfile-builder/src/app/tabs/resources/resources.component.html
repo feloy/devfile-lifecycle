@@ -11,7 +11,11 @@
 
     </mat-card>
 
-    <app-resource *ngIf="forceDisplayAdd || resources == undefined || resources.length == 0"></app-resource>
+    <app-resource 
+        *ngIf="forceDisplayAdd || resources == undefined || resources.length == 0"
+        [cancelable]="forceDisplayAdd"
+        (canceled)="undisplayAddForm()"
+    ></app-resource>
     <button *ngIf="!forceDisplayAdd && resources != undefined && resources.length > 0" mat-flat-button (click)="displayAddForm()">Add a new resource</button>
 
 </div>

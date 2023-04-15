@@ -23,4 +23,5 @@
     </form>
 
     <button [disabled]="form.invalid" mat-flat-button color="primary" matTooltip="create new image" (click)="create()">Create</button>
+    <button *ngIf="cancelable" mat-flat-button (click)="cancel()">Cancel</button>
 </div>

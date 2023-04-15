@@ -12,7 +12,11 @@
 
     </mat-card>
 
-    <app-container *ngIf="forceDisplayAdd || containers == undefined || containers.length == 0"></app-container>
+    <app-container 
+        *ngIf="forceDisplayAdd || containers == undefined || containers.length == 0"
+        [cancelable]="forceDisplayAdd"
+        (canceled)="undisplayAddForm()"
+        ></app-container>
     <button *ngIf="!forceDisplayAdd && containers != undefined && containers.length > 0" mat-flat-button (click)="displayAddForm()">Add a new container</button>
 
 </div>

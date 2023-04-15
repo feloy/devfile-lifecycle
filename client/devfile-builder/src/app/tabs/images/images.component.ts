@@ -30,4 +30,8 @@ export class ImagesComponent implements OnInit {
   displayAddForm() {
     this.forceDisplayAdd = true;
   }
+
+  undisplayAddForm() {
+    this.forceDisplayAdd = false;
+  }
 }

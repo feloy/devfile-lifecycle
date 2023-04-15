@@ -14,7 +14,11 @@
 
     </mat-card>
 
-    <app-image *ngIf="forceDisplayAdd || images == undefined || images.length == 0"></app-image>
+    <app-image
+        *ngIf="forceDisplayAdd || images == undefined || images.length == 0"
+        [cancelable]="forceDisplayAdd"
+        (canceled)="undisplayAddForm()"
+    ></app-image>
     <button *ngIf="!forceDisplayAdd && images != undefined && images.length > 0" mat-flat-button (click)="displayAddForm()">Add a new image</button>
 
 </div>
