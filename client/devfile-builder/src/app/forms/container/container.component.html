@@ -13,5 +13,5 @@
         <app-multi-text formControlName="args" label="Arg" addLabel="Add arg"></app-multi-text>
     </form>
 
-    <button mat-flat-button color="primary" matTooltip="create new container" (click)="create()">Create</button>
+    <button [disabled]="form.invalid" mat-flat-button color="primary" matTooltip="create new container" (click)="create()">Create</button>
 </div>

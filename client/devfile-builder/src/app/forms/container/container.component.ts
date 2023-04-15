@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { WasmGoService } from 'src/app/services/wasm-go.service';
+import { PATTERN_COMMAND_ID, PATTERN_CONTAINER_ID } from '../patterns';
 
 @Component({
   selector: 'app-container',
@@ -16,8 +17,8 @@ export class ContainerComponent {
     private state: StateService,
   ) {
     this.form = new FormGroup({
-      name: new FormControl(""),
-      image: new FormControl(""),
+      name: new FormControl("", [Validators.required, Validators.pattern(PATTERN_CONTAINER_ID)]),
+      image: new FormControl("", [Validators.required]),
       command: new FormControl([]),
       args: new FormControl([]),
     })
