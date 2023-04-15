@@ -63,3 +63,27 @@ func SetGroup(command *v1alpha2.Command, group string) {
 		return
 	}
 }
+
+func SetDefault(command *v1alpha2.Command, def bool) {
+	if command.Exec != nil {
+		if command.Exec.Group == nil {
+			command.Exec.Group = &v1alpha2.CommandGroup{}
+		}
+		command.Exec.Group.IsDefault = pointer.BoolPtr(def)
+		return
+	}
+	if command.Apply != nil {
+		if command.Apply.Group == nil {
+			command.Apply.Group = &v1alpha2.CommandGroup{}
+		}
+		command.Apply.Group.IsDefault = pointer.BoolPtr(def)
+		return
+	}
+	if command.Composite != nil {
+		if command.Composite.Group == nil {
+			command.Composite.Group = &v1alpha2.CommandGroup{}
+		}
+		command.Composite.Group.IsDefault = pointer.BoolPtr(def)
+		return
+	}
+}
