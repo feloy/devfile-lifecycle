@@ -10,6 +10,7 @@
 
                 <mat-tab label="YAML">
                     <div class="tab-content">
+                        <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
                         <mat-form-field appearance="outline" class="full-width">
                             <mat-label>Devfile YAML</mat-label>
                             <textarea matInput #input id="input" rows="20" [value]="devfileYaml"></textarea>

@@ -26,3 +26,8 @@ button {
 mat-form-field.full-width { width: 100%; }
 
 div.tab-content { padding: 16px; }
+
+div.error-message {
+    font-size: large;
+    margin: 16px;
+}

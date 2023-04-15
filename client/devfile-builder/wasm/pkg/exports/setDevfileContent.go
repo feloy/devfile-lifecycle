@@ -1,7 +1,7 @@
 package exports
 
 import (
-	"errors"
+	"fmt"
 	"syscall/js"
 
 	"github.com/devfile/library/v2/pkg/devfile"
@@ -30,7 +30,7 @@ func SetDevfileContent(content string) (map[string]interface{}, error) {
 	var err error
 	global.Devfile, _, err = devfile.ParseDevfileAndValidate(parserArgs)
 	if err != nil {
-		return nil, errors.New("error parsing devfile")
+		return nil, fmt.Errorf("error parsing devfile YAML: %w", err)
 	}
 	global.FS = filesystem.NewFakeFs()
 	global.Devfile.Ctx = context.FakeContext(global.FS, "/devfile.yaml")

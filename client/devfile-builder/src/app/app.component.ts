@@ -12,7 +12,8 @@ import { StateService } from './services/state.service';
 export class AppComponent implements OnInit {
 
   protected mermaidContent: string = "";
-  protected devfileYaml: string = ""
+  protected devfileYaml: string = "";
+  protected errorMessage: string  = "";
 
   constructor(
     protected sanitizer: DomSanitizer,
@@ -38,8 +39,13 @@ export class AppComponent implements OnInit {
   }
 
   async onButtonClick(content: string){
-    const newContent = this.wasmGo.setDevfileContent(content);
-    this.state.changeDevfileYaml(newContent);
+    const result = this.wasmGo.setDevfileContent(content);
+    if (result.err != '') {
+      console.log(result.err);
+      this.errorMessage = result.err;
+    } else {
+      this.errorMessage = '';
+      this.state.changeDevfileYaml(result.value);
+    }
   }
-
 }

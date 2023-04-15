@@ -215,9 +215,9 @@ export class WasmGoService {
   }
 
   // setDevfileContent calls the wasm module to reset the content of the Devfile
-  setDevfileContent(devfile: string): ResultValue {
+  setDevfileContent(devfile: string): Result {
     const result = setDevfileContent(devfile);
-    return result.value;
+    return result;
   }
 
   setMetadata(metadata: Metadata): ResultValue {
