@@ -19,13 +19,16 @@ func GetGroup(command v1alpha2.Command) string {
 }
 
 func GetDefault(command v1alpha2.Command) bool {
-	if command.Exec == nil {
-		return false
+	if command.Exec != nil && command.Exec.Group != nil {
+		return pointer.BoolDeref(command.Exec.Group.IsDefault, false)
 	}
-	if command.Exec.Group == nil {
-		return false
+	if command.Apply != nil && command.Apply.Group != nil {
+		return pointer.BoolDeref(command.Apply.Group.IsDefault, false)
 	}
-	return pointer.BoolDeref(command.Exec.Group.IsDefault, false)
+	if command.Composite != nil && command.Composite.Group != nil {
+		return pointer.BoolDeref(command.Composite.Group.IsDefault, false)
+	}
+	return false
 }
 
 func SetGroup(command *v1alpha2.Command, group string) {

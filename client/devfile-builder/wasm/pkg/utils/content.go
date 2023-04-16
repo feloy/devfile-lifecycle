@@ -133,9 +133,13 @@ func getCommands() ([]interface{}, error) {
 		}
 
 		if command.Composite != nil {
+			commands := make([]interface{}, 0, len(command.Composite.Commands))
+			for _, cmd := range command.Composite.Commands {
+				commands = append(commands, cmd)
+			}
 			newCommand["type"] = "composite"
 			newCommand["composite"] = map[string]interface{}{
-				"commands": strings.Join(command.Composite.Commands, ","),
+				"commands": commands,
 				"parallel": pointer.BoolDeref(command.Composite.Parallel, false),
 			}
 		}

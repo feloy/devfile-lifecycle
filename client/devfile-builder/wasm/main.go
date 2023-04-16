@@ -19,6 +19,7 @@ func main() {
 	js.Global().Set("addResource", js.FuncOf(exports.AddResourceWrapper))
 	js.Global().Set("addExecCommand", js.FuncOf(exports.AddExecCommandWrapper))
 	js.Global().Set("addApplyCommand", js.FuncOf(exports.AddApplyCommandWrapper))
+	js.Global().Set("addCompositeCommand", js.FuncOf(exports.AddCompositeCommandWrapper))
 	js.Global().Set("addUserCommand", js.FuncOf(exports.AddUserCommandWrapper))
 	js.Global().Set("getFlowChart", js.FuncOf(exports.GetFlowChartWrapper))
 	js.Global().Set("setDevfileContent", js.FuncOf(exports.SetDevfileContentWrapper))

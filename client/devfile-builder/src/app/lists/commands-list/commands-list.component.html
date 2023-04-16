@@ -10,8 +10,13 @@
             <mat-card-subtitle *ngIf="command.type == 'composite'">Composite Command</mat-card-subtitle>
         </mat-card-header>
 
+        <mat-checkbox 
+            *ngIf="command.group != ''" 
+            [checked]="command.default" 
+            (change)="toggleDefault($event, command.name, command.group)"
+        >Default {{kind}} command</mat-checkbox>
+
         <mat-card-content *ngIf="command.type == 'exec'">
-            <mat-checkbox *ngIf="command.group != ''" [checked]="command.default" (change)="toggleDefault($event, command.name, command.group)">Default {{kind}} command</mat-checkbox>
             <div>Container: {{command.exec?.component}}</div>
             <div>Command Line: {{command.exec?.commandLine}}</div>
             <div>Working Directory: {{command.exec?.workingDir}}</div>
@@ -30,12 +35,12 @@
             <div *ngIf="command.composite?.parallel">Commands executed in parallel</div>
             <div *ngIf="!command.composite?.parallel">Commands executed serially</div>
             <ng-container *ngIf="command.composite?.parallel">
-                <div class="parallel-command" *ngFor="let command of command.composite?.commands?.split(',')">
+                <div class="parallel-command" *ngFor="let command of command.composite?.commands">
                     <span class="command">{{command}}</span>
                 </div>
             </ng-container>
             <div class="serial-commands" *ngIf="!command.composite?.parallel">
-                <span class="command" *ngFor="let command of command.composite?.commands?.split(',')">
+                <span class="command" *ngFor="let command of command.composite?.commands">
                     {{command}}
                 </span>
             </div>

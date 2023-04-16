@@ -35,6 +35,7 @@ import { ImagesComponent } from './tabs/images/images.component';
 import { ImageComponent } from './forms/image/image.component';
 import { CommandImageComponent } from './forms/command-image/command-image.component';
 import { CommandsListComponent } from './lists/commands-list/commands-list.component';
+import { MultiCommandComponent } from './controls/multi-command/multi-command.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { CommandsListComponent } from './lists/commands-list/commands-list.compo
     ImageComponent,
     CommandImageComponent,
     CommandsListComponent,
+    MultiCommandComponent,
   ],
   imports: [
     BrowserModule,

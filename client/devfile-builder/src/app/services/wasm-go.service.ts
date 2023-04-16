@@ -65,7 +65,7 @@ export type ImageCommand = {
 };
 
 export type CompositeCommand = {
-  commands: string;
+  commands: string[];
   parallel: boolean;
 };
 
@@ -116,6 +116,7 @@ declare const addImage: (name: string, imageName: string, args: string[], buildC
 declare const addResource: (name: string, inlined: string) => Result;
 declare const addExecCommand: (name: string, component: string, commmandLine: string, workingDir: string, hotReloadCapable: boolean) => Result;
 declare const addApplyCommand: (name: string, component: string) => Result;
+declare const addCompositeCommand: (name: string, parallel: boolean, commands: string[]) => Result;
 declare const addUserCommand: (component: string, name: string, commandLine: string) => Result;
 declare const getFlowChart: () => ChartResult;
 declare const setDevfileContent: (devfile: string) => Result;
@@ -185,6 +186,15 @@ export class WasmGoService {
     const result = addApplyCommand(
       name,
       cmd.component,      
+    );
+    return result.value;
+  }
+
+  addCompositeCommand(name: string, cmd: CompositeCommand): ResultValue {
+    const result = addCompositeCommand(
+      name,
+      cmd.parallel,
+      cmd.commands,      
     );
     return result.value;
   }
