@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { StateService } from 'src/app/services/state.service';
 import { Command, WasmGoService } from 'src/app/services/wasm-go.service';
 
@@ -15,6 +16,7 @@ export class CommandsListComponent {
   constructor(
     private wasm: WasmGoService,
     private state: StateService,
+    private snackBar: MatSnackBar,
   ) {}
 
   toggleDefault(event: MatCheckboxChange, command: string, group: string) {
@@ -37,5 +39,16 @@ export class CommandsListComponent {
 
   getCommandsByKind(commands: Command[] | undefined, kind: string ): Command[] | undefined {
     return commands?.filter((c: Command) => c.group == kind);
+  }
+
+  delete(command: string) {
+    if(confirm('You will delete the command "'+command+'". Continue?')) {
+      const result = this.wasm.deleteCommand(command);
+      if (result.err != '') {
+        alert(result.err);
+      } else {
+        this.state.changeDevfileYaml(result.value);
+      }
+    }
   }
 }
