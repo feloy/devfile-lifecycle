@@ -10,6 +10,10 @@
             <div *ngIf="container.args.length > 0">Args: {{container.args.join(" ")}}</div>
         </mat-card-content>
 
+        <mat-card-actions>
+            <button mat-button (click)="delete(container.name)">Delete</button>
+        </mat-card-actions>
+
     </mat-card>
 
     <app-container 

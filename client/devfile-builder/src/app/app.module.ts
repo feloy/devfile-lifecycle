@@ -12,7 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -75,7 +74,6 @@ import { MultiCommandComponent } from './controls/multi-command/multi-command.co
     MatIconModule,
     MatInputModule,
     MatSelectModule,
-    MatSnackBarModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule

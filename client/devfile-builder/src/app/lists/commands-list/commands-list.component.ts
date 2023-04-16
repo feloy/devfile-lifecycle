@@ -16,7 +16,6 @@ export class CommandsListComponent {
   constructor(
     private wasm: WasmGoService,
     private state: StateService,
-    private snackBar: MatSnackBar,
   ) {}
 
   toggleDefault(event: MatCheckboxChange, command: string, group: string) {

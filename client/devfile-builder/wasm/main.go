@@ -29,6 +29,7 @@ func main() {
 	js.Global().Set("setDefaultCommand", js.FuncOf(exports.SetDefaultCommandWrapper))
 	js.Global().Set("unsetDefaultCommand", js.FuncOf(exports.UnsetDefaultCommandWrapper))
 	js.Global().Set("deleteCommand", js.FuncOf(exports.DeleteCommandWrapper))
+	js.Global().Set("deleteContainer", js.FuncOf(exports.DeleteContainerWrapper))
 
 	<-make(chan bool)
 }
