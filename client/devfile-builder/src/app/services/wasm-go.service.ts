@@ -128,6 +128,7 @@ declare const unsetDefaultCommand: (command: string) => Result;
 declare const deleteCommand: (command: string) => Result;
 declare const deleteContainer: (container: string) => Result;
 declare const deleteImage: (image: string) => Result;
+declare const deleteResource: (resource: string) => Result;
 
 @Injectable({
   providedIn: 'root'
@@ -265,6 +266,11 @@ export class WasmGoService {
 
   deleteImage(image: string): Result {
     const result = deleteImage(image);
+    return result;
+  }
+
+  deleteResource(resource: string): Result {
+    const result = deleteResource(resource);
     return result;
   }
 }

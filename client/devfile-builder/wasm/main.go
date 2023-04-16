@@ -31,6 +31,7 @@ func main() {
 	js.Global().Set("deleteCommand", js.FuncOf(exports.DeleteCommandWrapper))
 	js.Global().Set("deleteContainer", js.FuncOf(exports.DeleteContainerWrapper))
 	js.Global().Set("deleteImage", js.FuncOf(exports.DeleteImageWrapper))
+	js.Global().Set("deleteResource", js.FuncOf(exports.DeleteResourceWrapper))
 
 	<-make(chan bool)
 }
