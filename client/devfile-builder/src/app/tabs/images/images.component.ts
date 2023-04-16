@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from 'src/app/services/state.service';
-import { Image } from 'src/app/services/wasm-go.service';
+import { Image, WasmGoService } from 'src/app/services/wasm-go.service';
 
 @Component({
   selector: 'app-images',
@@ -14,6 +14,7 @@ export class ImagesComponent implements OnInit {
 
   constructor(
     private state: StateService,
+    private wasm: WasmGoService,
   ) {}
 
   ngOnInit() {
@@ -33,5 +34,16 @@ export class ImagesComponent implements OnInit {
 
   undisplayAddForm() {
     this.forceDisplayAdd = false;
+  }
+
+  delete(name: string) {
+    if(confirm('You will delete the image "'+name+'". Continue?')) {
+      const result = this.wasm.deleteImage(name);
+      if (result.err != '') {
+        alert(result.err);
+      } else {
+        this.state.changeDevfileYaml(result.value);
+      }
+    }
   }
 }

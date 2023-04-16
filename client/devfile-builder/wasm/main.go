@@ -30,6 +30,7 @@ func main() {
 	js.Global().Set("unsetDefaultCommand", js.FuncOf(exports.UnsetDefaultCommandWrapper))
 	js.Global().Set("deleteCommand", js.FuncOf(exports.DeleteCommandWrapper))
 	js.Global().Set("deleteContainer", js.FuncOf(exports.DeleteContainerWrapper))
+	js.Global().Set("deleteImage", js.FuncOf(exports.DeleteImageWrapper))
 
 	<-make(chan bool)
 }
