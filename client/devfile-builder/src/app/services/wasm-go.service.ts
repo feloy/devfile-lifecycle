@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 
-declare const Go: any;
-
 type ChartResult = {
   err: string;
   value: any;
@@ -137,14 +135,6 @@ declare const deleteResource: (resource: string) => Result;
 // The module manages a single instance of a Devfile
 export class WasmGoService {
 
-  constructor() { 
-    console.log("start wasm service");
-    const go = new Go();
-    WebAssembly.instantiateStreaming(fetch("./assets/devfile.wasm"), go.importObject).then((result) => {
-        go.run(result.instance);                
-    });
-  }
-
   addContainer(container: Container): ResultValue {
     const result = addContainer(
       container.name,
@@ -231,7 +221,7 @@ export class WasmGoService {
   // setDevfileContent calls the wasm module to reset the content of the Devfile
   setDevfileContent(devfile: string): Result {
     const result = setDevfileContent(devfile);
-    return result;
+    return result;  
   }
 
   setMetadata(metadata: Metadata): ResultValue {

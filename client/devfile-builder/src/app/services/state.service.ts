@@ -13,6 +13,7 @@ export class StateService {
   public state = this._state.asObservable(); 
 
   changeDevfileYaml(newValue: ResultValue) {
+    localStorage.setItem("devfile", newValue.content);
     this._state.next(newValue);
   }
 }

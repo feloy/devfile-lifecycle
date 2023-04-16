@@ -16,6 +16,7 @@
                             <textarea matInput #input id="input" rows="20" [value]="devfileYaml"></textarea>
                         </mat-form-field>
                         <button mat-flat-button color="primary" (click)="onButtonClick(input.value)">Save</button>
+                        <button mat-flat-button (click)="clear()">Clear</button>
                     </div>
                 </mat-tab>
 

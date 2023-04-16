@@ -23,6 +23,11 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const devfile = localStorage.getItem("devfile");
+    if (devfile != null) {
+      this.onButtonClick(devfile);
+    }
+
     this.state.state.subscribe(async newContent => {
       if (newContent == null) {
         return;
@@ -38,7 +43,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  async onButtonClick(content: string){
+  onButtonClick(content: string){
     const result = this.wasmGo.setDevfileContent(content);
     if (result.err != '') {
       console.log(result.err);
@@ -47,5 +52,10 @@ export class AppComponent implements OnInit {
       this.errorMessage = '';
       this.state.changeDevfileYaml(result.value);
     }
+  }
+
+  clear() {
+    localStorage.removeItem('devfile');
+    window.location.reload();
   }
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -36,6 +36,20 @@ import { ImageComponent } from './forms/image/image.component';
 import { CommandImageComponent } from './forms/command-image/command-image.component';
 import { CommandsListComponent } from './lists/commands-list/commands-list.component';
 import { MultiCommandComponent } from './controls/multi-command/multi-command.component';
+
+declare const Go: any;
+
+function loadWasmModule() {
+  return () => {
+    return new Promise<void>((resolve) => {
+      const go = new Go();
+      WebAssembly.instantiateStreaming(fetch("./assets/devfile.wasm"), go.importObject).then((result) => {
+          go.run(result.instance);
+          resolve();
+      });
+    });
+  };
+}
 
 @NgModule({
   declarations: [
@@ -78,7 +92,13 @@ import { MultiCommandComponent } from './controls/multi-command/multi-command.co
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadWasmModule,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
