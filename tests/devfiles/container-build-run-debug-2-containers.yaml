@@ -1,0 +1,36 @@
+commands:
+- exec:
+    commandLine: go build main.go
+    component: other-component
+    group:
+      isDefault: true
+      kind: build
+  id: my-build-second-container
+- exec:
+    commandLine: ./main
+    component: my-container
+    group:
+      isDefault: true
+      kind: run
+  id: my-run
+- exec:
+    commandLine: ./main --debug
+    component: my-container
+    group:
+      isDefault: true
+      kind: debug
+  id: my-debug
+components:
+- container:
+    endpoints:
+    - name: http
+      targetPort: 8080
+    - name: debug
+      targetPort: 5858
+    image: my-image
+  name: my-container
+- container:
+    image: other-image
+  name: other-container
+metadata: {}
+schemaVersion: 2.0.0

@@ -36,6 +36,17 @@ func TestBuildGraph(t *testing.T) {
 		},
 	}
 
+	secondComponent := v1alpha2.Component{
+		Name: "other-container",
+		ComponentUnion: v1alpha2.ComponentUnion{
+			Container: &v1alpha2.ContainerComponent{
+				Container: v1alpha2.Container{
+					Image: "other-image",
+				},
+			},
+		},
+	}
+
 	buildCommand := v1alpha2.Command{
 		Id: "my-build",
 		CommandUnion: v1alpha2.CommandUnion{
@@ -55,6 +66,27 @@ func TestBuildGraph(t *testing.T) {
 
 	defaultBuildCommand := *buildCommand.DeepCopy()
 	defaultBuildCommand.Exec.Group.IsDefault = pointer.Bool(true)
+
+	buildCommandSecondContainer := v1alpha2.Command{
+		Id: "my-build-second-container",
+		CommandUnion: v1alpha2.CommandUnion{
+			Exec: &v1alpha2.ExecCommand{
+				CommandLine: "go build main.go",
+				Component:   "other-container",
+				LabeledCommand: v1alpha2.LabeledCommand{
+					BaseCommand: v1alpha2.BaseCommand{
+						Group: &v1alpha2.CommandGroup{
+							Kind: v1alpha2.BuildCommandGroupKind,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	defaultBuildCommandSecondContainer := *buildCommandSecondContainer.DeepCopy()
+	defaultBuildCommandSecondContainer.Exec.Group.IsDefault = pointer.Bool(true)
+	defaultBuildCommandSecondContainer.Exec.Component = "other-component"
 
 	runCommand := v1alpha2.Command{
 		Id: "my-run",
@@ -347,7 +379,7 @@ func TestBuildGraph(t *testing.T) {
 		name            string
 		filename        string
 		dataVersion     string
-		component       func() v1alpha2.Component
+		components      func() []v1alpha2.Component
 		commands        func() []v1alpha2.Command
 		postStartEvents []string
 		preStopEvents   []string
@@ -356,14 +388,14 @@ func TestBuildGraph(t *testing.T) {
 			name:        "container only",
 			filename:    "container-only",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands:    func() []v1alpha2.Command { return nil },
 		},
 		{
 			name:        "container with Exec Build and Run commands",
 			filename:    "container-build-run",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					defaultBuildCommand,
@@ -375,7 +407,7 @@ func TestBuildGraph(t *testing.T) {
 			name:        "container with Exec Build, Run and Debug commands",
 			filename:    "container-build-run-debug",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					defaultBuildCommand,
@@ -385,10 +417,23 @@ func TestBuildGraph(t *testing.T) {
 			},
 		},
 		{
+			name:        "container with Exec Build, Run and Debug commands with 2 containers",
+			filename:    "container-build-run-debug-2-containers",
+			dataVersion: string(data.APISchemaVersion200),
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent, secondComponent} },
+			commands: func() []v1alpha2.Command {
+				return []v1alpha2.Command{
+					defaultBuildCommandSecondContainer,
+					defaultRunCommand,
+					defaultDebugCommand,
+				}
+			},
+		},
+		{
 			name:        "container with Exec Build and HotReload Capable Run commands",
 			filename:    "container-build-run-hot-reload",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					defaultBuildCommand,
@@ -400,7 +445,7 @@ func TestBuildGraph(t *testing.T) {
 			name:        "container with Composite Build and Exec Run commands",
 			filename:    "container-composite-build-exec-run",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					build2aCommand,
@@ -417,7 +462,7 @@ func TestBuildGraph(t *testing.T) {
 			name:        "container with Composite Build and Run commands",
 			filename:    "container-composite-build-run",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					build2aCommand,
@@ -437,7 +482,7 @@ func TestBuildGraph(t *testing.T) {
 			name:        "container with Composite Build, Run and Debug commands",
 			filename:    "container-composite-build-run-debug",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					build2aCommand,
@@ -461,7 +506,7 @@ func TestBuildGraph(t *testing.T) {
 			name:        "container with Exec Build and Run commands, and postStart event",
 			filename:    "container-build-run-post-start",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					defaultBuildCommand,
@@ -476,7 +521,7 @@ func TestBuildGraph(t *testing.T) {
 			name:        "container with Exec Build and Run commands, and preStop event",
 			filename:    "container-build-run-pre-stop",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					defaultBuildCommand,
@@ -491,7 +536,7 @@ func TestBuildGraph(t *testing.T) {
 			name:        "container with Exec Build and Run commands + a deploy command",
 			filename:    "container-build-run-deploy",
 			dataVersion: string(data.APISchemaVersion200),
-			component:   func() v1alpha2.Component { return baseComponent },
+			components:  func() []v1alpha2.Component { return []v1alpha2.Component{baseComponent} },
 			commands: func() []v1alpha2.Command {
 				return []v1alpha2.Command{
 					defaultBuildCommand,
@@ -510,7 +555,7 @@ func TestBuildGraph(t *testing.T) {
 			}
 			devfileData.SetSchemaVersion(tt.dataVersion)
 
-			err = devfileData.AddComponents([]v1alpha2.Component{tt.component()})
+			err = devfileData.AddComponents(tt.components())
 			if err != nil {
 				t.Error(err)
 			}
