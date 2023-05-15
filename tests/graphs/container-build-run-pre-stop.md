@@ -3,7 +3,7 @@ graph TB
 my-container["container: my-container<br/>image: my-image"]
 my-build["command: my-build"]
 my-container-my-run-expose["Expose ports<br/>http: 8080"]
-my-container-stop["Stop container<br/>container: my-container"]
+my-container-stop["Stop containers"]
 my-run["command: my-run"]
 pre-stop-1["Pre Stop<br/>command: pre-stop-1"]
 pre-stop-2["Pre Stop<br/>command: pre-stop-2"]
