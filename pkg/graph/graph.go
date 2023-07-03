@@ -40,7 +40,11 @@ func (o *Graph) AddEdge(from *Node, to *Node, text ...string) *Edge {
 func (o *Graph) ToFlowchart() string {
 	var str strings.Builder
 	str.WriteString("graph TB\n")
-	str.WriteString(fmt.Sprintf("%s[\"%s\"]\n", o.EntryNodeID, strings.Join(o.nodes[o.EntryNodeID].Text, "<br/>")))
+	texts := o.nodes[o.EntryNodeID].Text
+	if len(texts) == 0 {
+		texts = []string{o.EntryNodeID}
+	}
+	str.WriteString(fmt.Sprintf("%s[\"%s\"]\n", o.EntryNodeID, strings.Join(texts, "<br/>")))
 
 	keys := make([]string, 0, len(o.nodes))
 	for k := range o.nodes {

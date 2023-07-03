@@ -2,9 +2,6 @@
 ## explicit
 github.com/Azure/go-ansiterm
 github.com/Azure/go-ansiterm/winterm
-# github.com/Heiko-san/mermaidgen v0.0.0-20190623222458-ec72afae378b
-## explicit
-github.com/Heiko-san/mermaidgen/flowchart
 # github.com/Microsoft/go-winio v0.5.1
 ## explicit; go 1.12
 github.com/Microsoft/go-winio
