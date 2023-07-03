@@ -627,5 +627,5 @@ func getGraphBytes(t *testing.T, devfileData data.DevfileData) []byte {
 	if err != nil {
 		t.Error(err)
 	}
-	return []byte("```mermaid\n" + g.ToFlowchart().String() + "```\n")
+	return []byte("```mermaid\n" + g.ToFlowchart() + "```\n")
 }

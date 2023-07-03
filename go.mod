@@ -3,9 +3,9 @@ module github.com/feloy/devfile-lifecycle
 go 1.19
 
 require (
-	github.com/Heiko-san/mermaidgen v0.0.0-20190623222458-ec72afae378b
 	github.com/devfile/api/v2 v2.2.0
 	github.com/devfile/library/v2 v2.2.0
+	k8s.io/utils v0.0.0-20210722164352-7f3ee0f31471
 )
 
 require (
@@ -102,7 +102,6 @@ require (
 	k8s.io/klog v1.0.0 // indirect
 	k8s.io/klog/v2 v2.8.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7 // indirect
-	k8s.io/utils v0.0.0-20210722164352-7f3ee0f31471 // indirect
 	oras.land/oras-go v1.1.0 // indirect
 	sigs.k8s.io/controller-runtime v0.9.5 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.1.2 // indirect
